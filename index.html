@@ -63,8 +63,8 @@ body.about-open .header-bg{opacity:1;transition-duration:.5s}
 body.about-open .logo,body.about-open .nav-contact{opacity:.7}
 
 /* Hero — ©SPAZIOZENO, servizi, toggle (posizioni del Figma, scalate su 1440) */
-.hero{position:relative;z-index:20;height:calc(578 * var(--u))}
-.hero__title{position:absolute;left:var(--pad);right:var(--pad);top:calc(133 * var(--u));margin:0;font-weight:400;font-size:calc((100vw - 2 * var(--pad)) * 219.85 / 1400);line-height:1.05;letter-spacing:-.06em;white-space:nowrap;overflow:hidden;padding-bottom:.04em}
+.hero{position:relative;z-index:20;height:calc(578 * var(--u));container-type:inline-size}
+.hero__title{position:absolute;left:var(--pad);right:var(--pad);top:calc(133 * var(--u));margin:0;font-weight:400;font-size:calc((100vw - 2 * var(--pad)) * 219.85 / 1400);font-size:calc((100cqw - 2 * var(--pad)) * 219.85 / 1400);line-height:1.05;letter-spacing:-.06em;white-space:nowrap;overflow:hidden;padding-bottom:.04em}
 .hero__line{display:block;transform:translateY(105%);transition:transform 1.1s var(--osmo) .1s}
 .hero__services{position:absolute;left:calc(196 * var(--u));top:calc(360 * var(--u));margin:0;font-size:16px;line-height:1.4;text-transform:uppercase;opacity:0;transition:opacity .8s var(--osmo) .45s}
 body.is-ready .hero__line{transform:none}
@@ -121,7 +121,8 @@ body.about-open .about-backdrop{opacity:1;pointer-events:auto}
 body.about-open .about{clip-path:inset(0 0 0 0);visibility:visible}
 body.about-closing .about{visibility:visible;transition-duration:.6s}
 /* Misure del Figma (About Panel 1:471), scalate su 1440 */
-.about__text{grid-column:1;grid-row:1;margin:0;font-size:18px;line-height:1.4}
+.about__col{grid-column:1;grid-row:1;align-self:stretch;display:flex;flex-direction:column;gap:32px}
+.about__text{margin:0;font-size:18px;line-height:1.4}
 .about__text p{margin:0}
 .about__text p + p{margin-top:1.4em}
 .about__services{grid-column:3;grid-row:1;margin:0;font-size:18px;line-height:1.4}
@@ -142,7 +143,8 @@ body.about-open .about__text{transition-delay:.25s}
 body.about-open .about__services{transition-delay:.32s}
 body.about-open .about__arrows{transition-delay:.45s}
 /* Contatti in basso a sinistra, col fondo allineato allo spigolo inferiore della foto (Figma 1:482): etichetta 10 px grigia, dato 18 px */
-.about__info{grid-column:1;grid-row:1;align-self:end;margin:0 0 -5px;display:grid;grid-template-columns:1fr 1fr;column-gap:calc(20 * var(--u))}
+.about__info{margin:auto 0 -5px;display:grid;grid-template-columns:repeat(2,minmax(max-content,1fr));column-gap:max(24px, calc(20 * var(--u)))}
+.about__info dd{white-space:nowrap}
 .about__info div{margin:0}
 .about__info dt{font-size:10px;line-height:1.4;text-transform:uppercase;color:#737373}
 .about__info dd{margin:0;font-size:18px;line-height:1.4}
@@ -156,7 +158,8 @@ body.about-open .about__info{transition-delay:.4s}
 @media (min-width:768px) and (max-width:1023px){
   .about{grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;column-gap:32px;padding:12px var(--pad) 24px}
   .about__text{grid-column:1;grid-row:1 / span 2;font-size:16px}
-  .about__info{grid-column:1;grid-row:4;margin-top:24px}
+  .about__col{display:contents}
+  .about__info{grid-column:1 / -1;grid-row:4;margin:24px 0 0;grid-template-columns:auto auto;justify-content:start;column-gap:48px}
   .about{grid-template-rows:auto 1fr auto auto}
   .about__services{grid-column:1;grid-row:3;margin-top:24px;font-size:16px}
   .about__media{grid-column:2;grid-row:1;margin-top:6px}
@@ -174,7 +177,9 @@ body.about-open .about__info{transition-delay:.4s}
   .about{min-height:0;padding:12px var(--pad) 20px;display:flex;flex-direction:column;gap:24px}
   .about > *{flex-shrink:0}
   .about__text,.about__services,.about__media,.about__arrows,.about__info{margin-top:0;width:auto}
-  .about__info{grid-template-columns:1fr;row-gap:16px}
+  .about__col{display:contents}
+  .about__info{grid-template-columns:1fr;row-gap:16px;order:10;margin:0}
+  .about__info dd{white-space:normal}
   .about__info dd{font-size:16px}
   .about__text,.about__services{font-size:16px}
   .about__media{width:100%}
@@ -269,9 +274,15 @@ body.about-open .about__info{transition-delay:.4s}
 
 <div class="about-backdrop" id="aboutBackdrop"></div>
 <section class="about" id="about" data-lenis-prevent aria-hidden="true" aria-label="About">
+  <div class="about__col">
   <div class="about__text about__fade">
     <p>We are a design studio based in San Zeno, Brescia, Italy.<br>Startups or global companies, every project gets the same care. We listen, ask the right questions and stay with you from the first coffee to launch day.</p>
     <p>We start with your brand: who you are, who you talk to, why it matters. Then we design your website, identity and app so they speak with one voice. Photography and marketing, when you need them. Work that looks good, works well and helps you grow.</p>
+  </div>
+  <dl class="about__info about__fade">
+    <div><dt>Come for a coffee</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Leonardo+da+Vinci+2+San+Zeno+Naviglio+BS" target="_blank" rel="noopener">Via Leonardo da Vinci, 2</a></dd></div>
+    <div><dt>Start a project</dt><dd><a href="mailto:hello@spaziozeno.com">hello@spaziozeno.com</a></dd></div>
+  </dl>
   </div>
   <p class="about__services about__fade">Brand Strategy<br>Website Design<br>Branding<br>Digital Product Design<br>Photography<br>Performance Marketing</p>
   <div class="about__media" id="aboutMedia">
@@ -281,10 +292,7 @@ body.about-open .about__info{transition-delay:.4s}
     <button class="prev" type="button" aria-label="Previous image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2" stroke-linecap="square"/></svg></button>
     <button class="next" type="button" aria-label="Next image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2" stroke-linecap="square"/></svg></button>
   </div>
-  <dl class="about__info about__fade">
-    <div><dt>Come for a coffee</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Leonardo+da+Vinci+2+San+Zeno+Naviglio+BS" target="_blank" rel="noopener">Via Leonardo da Vinci, 2</a></dd></div>
-    <div><dt>Start a project</dt><dd><a href="mailto:hello@spaziozeno.com">hello@spaziozeno.com</a></dd></div>
-  </dl>
+  
 </section>
 
 <section class="hero" aria-label="Spazio Zeno">
