@@ -820,6 +820,9 @@ function initInfiniteCardsGrid() {
       const offsetX = size.itemW * gridOverscan;
       const offsetY = size.itemH * gridOverscan;
       const scrollY = pos.y - pos.startY;
+      /* Spazio Zeno: appena la griglia si sposta il logo diventa S — Z (come scrollando la pagina); torna intero vicino al punto di partenza */
+      const away = Math.abs(pos.x - pos.startX) + Math.abs(pos.y - pos.startY) > 40;
+      if (away !== !!window.__szGridAway) { window.__szGridAway = away; document.dispatchEvent(new Event('sz:grid-away')); }
       const s = scale.current.toFixed(4);
 
       for (let i = 0; i < cards.length; i++) {
@@ -876,6 +879,16 @@ function initInfiniteCardsGrid() {
       }
     }
 
+    /* Spazio Zeno: clic sul logo → la griglia torna al punto di partenza (in orizzontale per la via più breve) */
+    window.__szGridHome = () => {
+      if (!size.totalW) return;
+      const dx = pos.x - pos.startX;
+      const k = Math.round(dx / size.totalW);
+      pos.x -= k * size.totalW;
+      pos.targetX = pos.startX; pos.targetY = pos.startY;
+      scale.target = 1;
+      settled = false;
+    };
     let builtW = wrapper.clientWidth, builtH = wrapper.clientHeight;
     window.addEventListener('resize', () => {
       clearTimeout(timers.resize);
@@ -1054,7 +1067,8 @@ document.addEventListener('DOMContentLoaded', () => {
   toggles.forEach((b) => b.addEventListener('click', () => (b.dataset.mode === 'immersive' ? enterImmersive() : exitImmersive())));
 
   /* Logo: si stringe a S — Z appena si scrolla, torna SPAZIO — ZENO in cima */
-  const setScrolled = () => body.classList.toggle('is-scrolled', window.scrollY > 40);
+  const setScrolled = () => body.classList.toggle('is-scrolled', window.scrollY > 40 || !!window.__szGridAway);
+  document.addEventListener('sz:grid-away', setScrolled);
   window.addEventListener('scroll', setScrolled, {passive: true});
   setScrolled();
 
@@ -1124,7 +1138,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('.logo').addEventListener('click', (e) => {
     e.preventDefault();
     closeAbout();
-    if (immersive && !immersiveOnly) exitImmersive(); else if (!immersive) scrollTop();
+    if (immersive && !immersiveOnly) exitImmersive(); else if (!immersive) scrollTop(); else if (window.__szGridHome) window.__szGridHome();
   });
 
   /* Slider dell'About: la nuova foto si scopre dal lato della freccia (0,9 s) */
