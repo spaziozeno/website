@@ -84,7 +84,7 @@ html.is-immersive .view-toggle{pointer-events:auto}
 
 /* Galleria statica — 3 colonne da 463, 6 px tra le card, 20 px ai lati */
 .gallery-sentinel{height:1px}
-.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 6px;padding:0 var(--pad) var(--pad);align-items:start;transition:opacity .8s var(--osmo)}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 var(--pad) var(--pad);align-items:start;transition:opacity .8s var(--osmo)}
 .card{position:relative;display:block;margin:0}
 .card__frame{position:relative;aspect-ratio:1}
 .card.is-wide .card__frame{aspect-ratio:463/281}
@@ -101,6 +101,8 @@ html.is-immersive .gallery{opacity:0;pointer-events:none}
 html.is-immersive .immersive{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .5s var(--osmo),visibility 0s}
 /* Segnaposto grigi al posto delle foto (le immagini vere arriveranno dai progetti dello studio) */
 .infinite-grid__card-img{background:var(--ph)}
+/* Nomi sotto le immagini nascosti per ora (D-425): per riattivarli togliere questa riga e rimettere gap 20px 6px alla galleria */
+.card__name,.grid-name{display:none!important}
 .grid-name{position:absolute;left:0;top:calc(100% + 8px);white-space:nowrap;pointer-events:none;transition:opacity .9s var(--osmo)}
 .immersive.is-wave-start .grid-name{opacity:0;transition:none}
 .about__slide{background:var(--ph)}
