@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Spazio Zeno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap" rel="stylesheet">
 <style>
 @font-face{font-family:"Neue Montreal";src:url("fonts/NeueMontreal-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 
@@ -68,9 +71,14 @@ html.is-immersive .hero{position:fixed;inset:0 0 auto 0;mix-blend-mode:differenc
 html.is-immersive .view-toggle{pointer-events:auto}
 
 /* Galleria statica — 3 colonne da 463, 6 px tra le card, 20 px ai lati */
-.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 var(--pad) var(--pad);align-items:start;transition:opacity .8s var(--osmo)}
-.card{position:relative;display:block;margin:0;aspect-ratio:1}
-.card.is-wide{aspect-ratio:463/281}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 6px;padding:0 var(--pad) var(--pad);align-items:start;transition:opacity .8s var(--osmo)}
+.card{position:relative;display:block;margin:0}
+.card__frame{position:relative;aspect-ratio:1}
+.card.is-wide .card__frame{aspect-ratio:463/281}
+/* Nome sotto l'immagine, come aliciawtc.com: Fragment Mono 11 px maiuscolo, 8 px sotto la foto */
+.card__name,.grid-name{font-family:"Fragment Mono",ui-monospace,monospace;font-size:11px;line-height:11px;text-transform:uppercase;letter-spacing:0;color:var(--fg)}
+.card__name{display:block;margin-top:8px;opacity:0;transition:opacity .8s var(--osmo) .3s}
+.card.is-in .card__name{opacity:1}
 .card__media{position:absolute;inset:0;overflow:hidden;background:var(--ph);clip-path:inset(100% 0 0 0);transition:clip-path 1.1s var(--osmo)}
 .card.is-in .card__media{clip-path:inset(0 0 0 0)}
 html.is-immersive .gallery{opacity:0;pointer-events:none}
@@ -80,6 +88,8 @@ html.is-immersive .gallery{opacity:0;pointer-events:none}
 html.is-immersive .immersive{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .5s var(--osmo),visibility 0s}
 /* Segnaposto grigi al posto delle foto (le immagini vere arriveranno dai progetti dello studio) */
 .infinite-grid__card-img{background:var(--ph)}
+.grid-name{position:absolute;left:0;top:calc(100% + 8px);white-space:nowrap;pointer-events:none;transition:opacity .9s var(--osmo)}
+.immersive.is-wave-start .grid-name{opacity:0;transition:none}
 .about__slide{background:var(--ph)}
 .about__slide.is-alt{background:#CFCFCF}
 /* Entrata a onda: tutte le immagini salgono dal basso in dissolvenza, da sinistra a destra (curva osmo); l'uscita resta in dissolvenza */
@@ -267,15 +277,15 @@ body.about-open .about__arrows{transition-delay:.45s}
 </section>
 
 <main class="gallery" aria-label="Projects">
-  <figure class="card"><div class="card__media"></div></figure>
-  <figure class="card"><div class="card__media"></div></figure>
-  <figure class="card"><div class="card__media"></div></figure>
-  <figure class="card"><div class="card__media"></div></figure>
-  <figure class="card is-wide"><div class="card__media"></div></figure>
-  <figure class="card"><div class="card__media"></div></figure>
-  <figure class="card"><div class="card__media"></div></figure>
-  <figure class="card is-wide"><div class="card__media"></div></figure>
-  <figure class="card"><div class="card__media"></div></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_01.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_02.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_03.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_04.JPG</figcaption></figure>
+  <figure class="card is-wide"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_05.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_06.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_07.JPG</figcaption></figure>
+  <figure class="card is-wide"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_08.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_09.JPG</figcaption></figure>
 </main>
 
 <div class="immersive" aria-hidden="true">
@@ -286,61 +296,73 @@ body.about-open .about__arrows{transition-delay:.45s}
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_01.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_02.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_03.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_04.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_05.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_06.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_07.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_08.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_09.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_10.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_11.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
           <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+          <span class="grid-name">PROJECT_12.JPG</span>
         </div>
       </div>
     </div>
