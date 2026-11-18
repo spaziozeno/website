@@ -68,7 +68,8 @@ body.is-ready .view-toggle{opacity:1}
 .view-toggle svg{display:block;width:24px;height:24px}
 
 /* In modalità immersiva il mega logo e il resto restano sopra la griglia, che passa sotto */
-html.is-immersive .hero{position:fixed;inset:0 0 auto 0;mix-blend-mode:difference;pointer-events:none}
+/* Il mega logo resta nel flusso (la pagina è già in cima): niente salto della galleria durante il passaggio */
+html.is-immersive .hero{mix-blend-mode:difference;pointer-events:none}
 html.is-immersive .view-toggle{pointer-events:auto}
 
 /* Galleria statica — 3 colonne da 463, 6 px tra le card, 20 px ai lati */
