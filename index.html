@@ -28,6 +28,12 @@ html.is-immersive,html.is-immersive body{overflow:hidden;height:100%}
 .site-header{position:fixed;inset:0 0 auto 0;height:var(--header);z-index:40;display:flex;align-items:flex-start;justify-content:space-between;padding:20px var(--pad) 0;mix-blend-mode:difference;pointer-events:none}
 .site-header > *{pointer-events:auto}
 .nav-link{font-size:14px;line-height:16px;text-transform:uppercase;transition:opacity .6s var(--osmo)}
+/* About ↔ Close: le due parole sovrapposte, scorrono in verticale con il pannello */
+.nav-about{display:inline-grid;overflow:hidden;height:16px}
+.nav-about__label{grid-area:1 / 1;transition:transform .8s var(--osmo)}
+.nav-about__label.is-close{transform:translateY(100%)}
+body.about-open .nav-about__label.is-about{transform:translateY(-100%)}
+body.about-open .nav-about__label.is-close{transform:translateY(0)}
 .logo{position:absolute;left:50%;top:23px;transform:translateX(-50%);display:block;width:78px;height:11px;transition:opacity .6s var(--osmo)}
 .logo svg{display:block;width:100%;height:100%}
 .header-bg{position:fixed;inset:0 0 auto 0;height:var(--header);z-index:39;background:var(--menu);opacity:0;pointer-events:none;transition:opacity .6s var(--osmo)}
@@ -213,7 +219,7 @@ body.about-open .about__arrows{transition-delay:.45s}
 
 <div class="header-bg" aria-hidden="true"></div>
 <header class="site-header">
-  <button class="nav-link nav-about" type="button" aria-expanded="false" aria-controls="about">About</button>
+  <button class="nav-link nav-about" type="button" aria-expanded="false" aria-controls="about" aria-label="Open About"><span class="nav-about__label is-about" aria-hidden="true">About</span><span class="nav-about__label is-close" aria-hidden="true">Close</span></button>
   <a class="logo" href="#" aria-label="Spazio Zeno">
     <svg width="78" height="11" viewBox="0 0 78 11" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 <path d="M6.39332 3.18258C6.31822 2.45969 6.05535 1.93865 5.60472 1.61945C5.16348 1.29087 4.59549 1.12658 3.90077 1.12658C3.61913 1.12658 3.34218 1.15474 3.06992 1.21107C2.79767 1.2674 2.55357 1.36128 2.33765 1.49271C2.13111 1.62415 1.96212 1.80252 1.83069 2.02784C1.70864 2.24376 1.64762 2.51602 1.64762 2.8446C1.64762 3.15441 1.73681 3.40789 1.91518 3.60504C2.10294 3.79281 2.34703 3.94771 2.64745 4.06976C2.95726 4.1918 3.30462 4.29507 3.68954 4.37957C4.07445 4.45467 4.46406 4.53916 4.85836 4.63305C5.26205 4.72693 5.65635 4.83958 6.04127 4.97102C6.42618 5.09306 6.76885 5.26205 7.06927 5.47798C7.37908 5.69391 7.62317 5.96616 7.80154 6.29475C7.9893 6.62333 8.08319 7.03641 8.08319 7.53398C8.08319 8.0691 7.96114 8.52912 7.71705 8.91404C7.48235 9.28956 7.17723 9.59937 6.80171 9.84346C6.42618 10.0782 6.00371 10.2472 5.53431 10.3504C5.07429 10.4631 4.61427 10.5194 4.15425 10.5194C3.59096 10.5194 3.05584 10.449 2.54888 10.3082C2.05131 10.1674 1.61007 9.95612 1.22515 9.67447C0.849627 9.38344 0.549206 9.01731 0.323891 8.57606C0.107964 8.12543 0 7.595 0 6.98477H1.2674C1.2674 7.40724 1.3472 7.77338 1.5068 8.08319C1.67578 8.38361 1.89171 8.63239 2.15458 8.82954C2.42683 9.02669 2.74134 9.17221 3.09809 9.26609C3.45483 9.35997 3.82097 9.40691 4.1965 9.40691C4.49692 9.40691 4.79734 9.37875 5.09776 9.32242C5.40757 9.26609 5.68452 9.17221 5.92861 9.04078C6.1727 8.89995 6.36985 8.71219 6.52006 8.47749C6.67027 8.24278 6.74538 7.94236 6.74538 7.57623C6.74538 7.22887 6.6515 6.94722 6.46373 6.73129C6.28536 6.51537 6.04127 6.34169 5.73146 6.21025C5.43104 6.06943 5.08837 5.95677 4.70346 5.87228C4.31854 5.78779 3.92424 5.70329 3.52055 5.6188C3.12625 5.52492 2.73664 5.42165 2.35173 5.30899C1.96681 5.18695 1.61945 5.03204 1.30965 4.84428C1.00922 4.64713 0.765133 4.39834 0.57737 4.09792C0.398996 3.78811 0.309809 3.4032 0.309809 2.94318C0.309809 2.43622 0.413078 1.99967 0.619617 1.63354C0.826156 1.25801 1.09841 0.952896 1.43639 0.718192C1.78375 0.474101 2.17335 0.295726 2.60521 0.183068C3.04645 0.0610227 3.49708 0 3.9571 0C4.47345 0 4.95224 0.0610227 5.39349 0.183068C5.83473 0.305114 6.21964 0.497571 6.54823 0.760439C6.8862 1.02331 7.14907 1.35659 7.33683 1.76028C7.53398 2.15458 7.64194 2.62868 7.66072 3.18258H6.39332Z" fill="white"/>
@@ -731,6 +737,7 @@ document.addEventListener('DOMContentLoaded', () => {
     body.classList.remove('about-closing');
     body.classList.add('about-open');
     aboutBtn.setAttribute('aria-expanded', 'true');
+    aboutBtn.setAttribute('aria-label', 'Close About');
     about.setAttribute('aria-hidden', 'false');
     if (lenis && !immersive) lenis.stop();
   }
@@ -740,6 +747,7 @@ document.addEventListener('DOMContentLoaded', () => {
     body.classList.add('about-closing');
     body.classList.remove('about-open');
     aboutBtn.setAttribute('aria-expanded', 'false');
+    aboutBtn.setAttribute('aria-label', 'Open About');
     about.setAttribute('aria-hidden', 'true');
     if (lenis && !immersive) lenis.start();
     closeTimer = setTimeout(() => body.classList.remove('about-closing'), 650);
