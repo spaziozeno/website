@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spazio Zeno</title>
+<style>
+@font-face{font-family:"Neue Montreal";src:url("fonts/NeueMontreal-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+
+/* ---------- Spazio Zeno (Figma ↳ Homepage / Desktop / 1440w / Grid Large) ---------- */
+:root{
+  --bg:#111111; --fg:#ffffff; --menu:#1B1B1B; --ph:#D9D9D9;
+  --osmo:cubic-bezier(0.625, 0.05, 0, 1);
+  --pad:20px; --header:46px;
+  --u:calc(100vw / 1440);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Neue Montreal","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+html.is-immersive,html.is-immersive body{overflow:hidden;height:100%}
+
+/* Header — About · S — ZENO · Contact (14 px maiuscolo, 20 px dai bordi) */
+.site-header{position:fixed;inset:0 0 auto 0;height:var(--header);z-index:40;display:flex;align-items:flex-start;justify-content:space-between;padding:20px var(--pad) 0;mix-blend-mode:difference;pointer-events:none}
+.site-header > *{pointer-events:auto}
+.nav-link{font-size:14px;line-height:16px;text-transform:uppercase;transition:opacity .6s var(--osmo)}
+.logo{position:absolute;left:50%;top:23px;transform:translateX(-50%);display:block;width:78px;height:11px;transition:opacity .6s var(--osmo)}
+.logo svg{display:block;width:100%;height:100%}
+.header-bg{position:fixed;inset:0 0 auto 0;height:var(--header);z-index:39;background:var(--menu);opacity:0;pointer-events:none;transition:opacity .6s var(--osmo)}
+body.about-open .header-bg{opacity:1;transition-duration:.5s}
+body.about-open .logo,body.about-open .nav-contact{opacity:.7}
+
+/* Hero — ©SPAZIOZENO, servizi, toggle (posizioni del Figma, scalate su 1440) */
+.hero{position:relative;z-index:20;height:calc(578 * var(--u))}
+.hero__title{position:absolute;left:var(--pad);right:var(--pad);top:calc(133 * var(--u));margin:0;font-weight:400;font-size:calc((100vw - 2 * var(--pad)) * 219.85 / 1400);line-height:1.05;letter-spacing:-.06em;white-space:nowrap;overflow:hidden;padding-bottom:.04em}
+.hero__line{display:block;transform:translateY(105%);transition:transform 1.1s var(--osmo) .1s}
+.hero__services{position:absolute;left:calc(196 * var(--u));top:calc(360 * var(--u));margin:0;font-size:16px;line-height:1.4;text-transform:uppercase;opacity:0;transition:opacity .8s var(--osmo) .45s}
+body.is-ready .hero__line{transform:none}
+body.is-ready .hero__services{opacity:1}
+
+.view-toggle{position:absolute;right:var(--pad);top:calc(528 * var(--u));display:flex;gap:8px;opacity:0;transition:opacity .8s var(--osmo) .6s}
+body.is-ready .view-toggle{opacity:1}
+.view-toggle button{width:24px;height:24px;display:block;opacity:.4;transition:opacity .4s var(--osmo)}
+.view-toggle button:hover{opacity:.75}
+.view-toggle button[aria-pressed="true"]{opacity:1}
+.view-toggle svg{display:block;width:24px;height:24px}
+
+/* In modalità immersiva il mega logo e il resto restano sopra la griglia, che passa sotto */
+html.is-immersive .hero{position:fixed;inset:0 0 auto 0;mix-blend-mode:difference;pointer-events:none}
+html.is-immersive .view-toggle{pointer-events:auto}
+
+/* Galleria statica — 3 colonne da 463, 6 px tra le card, 20 px ai lati */
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 var(--pad) var(--pad);align-items:start;transition:opacity .8s var(--osmo)}
+.card{position:relative;display:block;margin:0;aspect-ratio:1}
+.card.is-wide{aspect-ratio:463/281}
+.card__media{position:absolute;inset:0;overflow:hidden;background:var(--ph);clip-path:inset(100% 0 0 0);transition:clip-path 1.1s var(--osmo)}
+.card.is-in .card__media{clip-path:inset(0 0 0 0)}
+html.is-immersive .gallery{opacity:0;pointer-events:none}
+
+/* Livello immersivo — la griglia infinita di Osmo, sotto hero e header */
+.immersive{position:fixed;inset:0;z-index:10;background:var(--bg);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .8s var(--osmo),visibility 0s linear .8s}
+html.is-immersive .immersive{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .5s var(--osmo),visibility 0s}
+/* Segnaposto grigi al posto delle foto (le immagini vere arriveranno dai progetti dello studio) */
+.infinite-grid__card-img{background:var(--ph)}
+.about__slide{background:var(--ph)}
+.about__slide.is-alt{background:#CFCFCF}
+/* Entrata a onda: tutte le immagini salgono dal basso in dissolvenza, da sinistra a destra (curva osmo); l'uscita resta in dissolvenza */
+.immersive .infinite-grid__card-img{transform:translateY(0);opacity:1;transition:transform 1.2s var(--osmo),opacity .9s var(--osmo)}
+.immersive.is-wave-start .infinite-grid__card-img{transform:translateY(30vh);opacity:0;transition:none}
+
+/* About — tendina sotto l'header (Figma: y 46, alta 520, #111) */
+.about-backdrop{position:fixed;inset:0;z-index:24;background:rgba(17,17,17,.6);opacity:0;pointer-events:none;transition:opacity .7s var(--osmo)}
+body.about-open .about-backdrop{opacity:1;pointer-events:auto}
+.about{position:fixed;left:0;right:0;top:var(--header);height:calc(520.5 * var(--u));min-height:420px;z-index:25;background:var(--menu);clip-path:inset(0 0 100% 0);transition:clip-path .8s var(--osmo);visibility:hidden}
+body.about-open .about{clip-path:inset(0 0 0 0);visibility:visible}
+body.about-closing .about{visibility:visible;transition-duration:.6s}
+/* Misure del Figma (About Panel 1:471), scalate su 1440 */
+.about__text{position:absolute;left:var(--pad);top:calc(11.4 * var(--u));width:calc(516 * var(--u));margin:0;font-size:18px;line-height:1.4}
+.about__text p{margin:0}
+.about__text p + p{margin-top:1.4em}
+.about__services{position:absolute;left:calc(681.4 * var(--u));top:calc(11.4 * var(--u));margin:0;font-size:18px;line-height:1.4}
+.about__media{position:absolute;left:calc(1012.4 * var(--u));top:calc(18.7 * var(--u));width:calc(407.8 * var(--u));height:calc(405.1 * var(--u));overflow:hidden}
+.about__slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 0 0)}
+.about__slide.is-entering-next{clip-path:inset(0 0 0 100%)}
+.about__slide.is-entering-prev{clip-path:inset(0 100% 0 0)}
+.about__slide.is-moving{transition:clip-path .9s var(--osmo)}
+.about__arrows{position:absolute;left:calc(1332.8 * var(--u));top:calc(426.8 * var(--u));display:flex}
+.about__arrows button{width:calc(45.8 * var(--u));height:calc(45.8 * var(--u));min-width:32px;min-height:32px;display:block;transition:opacity .4s var(--osmo)}
+.about__arrows button + button{margin-left:calc(-5.2 * var(--u))}
+.about__arrows button:disabled{opacity:.2;cursor:default}
+.about__arrows svg{display:block;width:100%;height:100%}
+.about__arrows .prev svg{transform:rotate(180deg)}
+.about__fade{opacity:0;transition:opacity .25s var(--osmo)}
+body.about-open .about__fade{opacity:1;transition:opacity .7s var(--osmo)}
+body.about-open .about__text{transition-delay:.25s}
+body.about-open .about__services{transition-delay:.32s}
+body.about-open .about__arrows{transition-delay:.45s}
+
+/* Tablet: 2 colonne */
+@media (max-width:1023px){ .gallery{grid-template-columns:repeat(2,1fr)} }
+/* Mobile 390 — come «Homepage / Mobile / 390w / Grid Large» */
+@media (max-width:767px){
+  .hero{height:322px}
+  .hero__title{top:96px}
+  .hero__services{left:var(--pad);top:calc(96px + (100vw - 2 * var(--pad)) * 0.166 + 12px)}
+  .view-toggle{top:auto;bottom:26px}
+  .gallery{grid-template-columns:1fr}
+  .about{height:auto;min-height:0;max-height:calc(100svh - var(--header));overflow:auto;padding:12px var(--pad) 20px;display:flex;flex-direction:column;gap:24px}
+  .about > *{flex-shrink:0}
+  .about__text,.about__services,.about__media,.about__arrows{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto}
+  .about__text,.about__services{font-size:16px}
+  .about__media{width:100%;height:auto;aspect-ratio:407.8/405.1}
+  .about__arrows button{width:46px;height:46px}
+  .about__arrows button + button{margin-left:-5px}
+  .about__arrows{align-self:flex-end}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;transition-delay:0s!important}
+}
+
+/* ---------- Osmo Supply · Infinite Draggable Grid (Masonary) — CSS invariato ---------- */
+.infinite-grid {
+  touch-action: none;
+  width: 100%;
+  height: 100svh;
+  position: relative;
+  overflow: clip;
+  cursor: grab;
+  transition: opacity 0.5s ease;
+  opacity: 1;
+}
+
+.infinite-grid[data-infinite-grid-status="loading"] {
+  opacity: 0;
+}
+
+.infinite-grid[data-infinite-grid-status="dragging"] {
+  cursor: grabbing;
+}
+
+.infinite-grid__collection {
+  will-change: transform;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.infinite-grid__list {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.infinite-grid__item {
+  aspect-ratio: 1;
+  will-change: transform;
+  backface-visibility: hidden;
+  justify-content: center;
+  align-items: center;
+  width: 13em;
+  padding: 2.25em;
+  font-size: clamp(1.5em, 2vw, 3em);
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.infinite-grid__card {
+  -webkit-user-select: none;
+  user-select: none;
+  will-change: transform;
+  backface-visibility: hidden;
+  border-radius: .125em;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.infinite-grid__card-img {
+  pointer-events: none;
+  object-fit: cover;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+</style>
+</head>
+<body>
+
+<div class="header-bg" aria-hidden="true"></div>
+<header class="site-header">
+  <button class="nav-link nav-about" type="button" aria-expanded="false" aria-controls="about">About</button>
+  <a class="logo" href="#" aria-label="Spazio Zeno">
+    <svg width="78" height="11" viewBox="0 0 78 11" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<path d="M6.39332 3.18258C6.31822 2.45969 6.05535 1.93865 5.60472 1.61945C5.16348 1.29087 4.59549 1.12658 3.90077 1.12658C3.61913 1.12658 3.34218 1.15474 3.06992 1.21107C2.79767 1.2674 2.55357 1.36128 2.33765 1.49271C2.13111 1.62415 1.96212 1.80252 1.83069 2.02784C1.70864 2.24376 1.64762 2.51602 1.64762 2.8446C1.64762 3.15441 1.73681 3.40789 1.91518 3.60504C2.10294 3.79281 2.34703 3.94771 2.64745 4.06976C2.95726 4.1918 3.30462 4.29507 3.68954 4.37957C4.07445 4.45467 4.46406 4.53916 4.85836 4.63305C5.26205 4.72693 5.65635 4.83958 6.04127 4.97102C6.42618 5.09306 6.76885 5.26205 7.06927 5.47798C7.37908 5.69391 7.62317 5.96616 7.80154 6.29475C7.9893 6.62333 8.08319 7.03641 8.08319 7.53398C8.08319 8.0691 7.96114 8.52912 7.71705 8.91404C7.48235 9.28956 7.17723 9.59937 6.80171 9.84346C6.42618 10.0782 6.00371 10.2472 5.53431 10.3504C5.07429 10.4631 4.61427 10.5194 4.15425 10.5194C3.59096 10.5194 3.05584 10.449 2.54888 10.3082C2.05131 10.1674 1.61007 9.95612 1.22515 9.67447C0.849627 9.38344 0.549206 9.01731 0.323891 8.57606C0.107964 8.12543 0 7.595 0 6.98477H1.2674C1.2674 7.40724 1.3472 7.77338 1.5068 8.08319C1.67578 8.38361 1.89171 8.63239 2.15458 8.82954C2.42683 9.02669 2.74134 9.17221 3.09809 9.26609C3.45483 9.35997 3.82097 9.40691 4.1965 9.40691C4.49692 9.40691 4.79734 9.37875 5.09776 9.32242C5.40757 9.26609 5.68452 9.17221 5.92861 9.04078C6.1727 8.89995 6.36985 8.71219 6.52006 8.47749C6.67027 8.24278 6.74538 7.94236 6.74538 7.57623C6.74538 7.22887 6.6515 6.94722 6.46373 6.73129C6.28536 6.51537 6.04127 6.34169 5.73146 6.21025C5.43104 6.06943 5.08837 5.95677 4.70346 5.87228C4.31854 5.78779 3.92424 5.70329 3.52055 5.6188C3.12625 5.52492 2.73664 5.42165 2.35173 5.30899C1.96681 5.18695 1.61945 5.03204 1.30965 4.84428C1.00922 4.64713 0.765133 4.39834 0.57737 4.09792C0.398996 3.78811 0.309809 3.4032 0.309809 2.94318C0.309809 2.43622 0.413078 1.99967 0.619617 1.63354C0.826156 1.25801 1.09841 0.952896 1.43639 0.718192C1.78375 0.474101 2.17335 0.295726 2.60521 0.183068C3.04645 0.0610227 3.49708 0 3.9571 0C4.47345 0 4.95224 0.0610227 5.39349 0.183068C5.83473 0.305114 6.21964 0.497571 6.54823 0.760439C6.8862 1.02331 7.14907 1.35659 7.33683 1.76028C7.53398 2.15458 7.64194 2.62868 7.66072 3.18258H6.39332Z" fill="white"/>
+<path d="M39.9641 9.16752L46.2166 1.36597H40.4429V0.239397H47.7938V1.36597L41.5554 9.16752H47.9628V10.2941H39.9641V9.16752Z" fill="white"/>
+<path d="M49.3616 0.239397H56.3041V1.36597H50.6994V4.56263H55.9239V5.68921H50.6994V9.16752H56.3463V10.2941H49.3616V0.239397Z" fill="white"/>
+<path d="M57.9563 0.239397H59.3786L64.6735 8.39299H64.7017V0.239397H65.9691V10.2941H64.5046L59.2519 2.22499H59.2237V10.2941H57.9563V0.239397Z" fill="white"/>
+<path d="M68.9078 5.26674C68.9078 5.7737 68.9735 6.27597 69.1049 6.77354C69.2364 7.26172 69.4429 7.70297 69.7245 8.09727C70.0062 8.49157 70.3676 8.81077 70.8089 9.05486C71.2501 9.28956 71.7759 9.40691 72.3861 9.40691C72.9963 9.40691 73.522 9.28956 73.9633 9.05486C74.4045 8.81077 74.766 8.49157 75.0476 8.09727C75.3293 7.70297 75.5358 7.26172 75.6672 6.77354C75.7987 6.27597 75.8644 5.7737 75.8644 5.26674C75.8644 4.75979 75.7987 4.26221 75.6672 3.77403C75.5358 3.27646 75.3293 2.83052 75.0476 2.43622C74.766 2.04192 74.4045 1.72742 73.9633 1.49271C73.522 1.24862 72.9963 1.12658 72.3861 1.12658C71.7759 1.12658 71.2501 1.24862 70.8089 1.49271C70.3676 1.72742 70.0062 2.04192 69.7245 2.43622C69.4429 2.83052 69.2364 3.27646 69.1049 3.77403C68.9735 4.26221 68.9078 4.75979 68.9078 5.26674ZM67.57 5.26674C67.57 4.58141 67.6685 3.92424 67.8657 3.29524C68.0722 2.65684 68.3773 2.09355 68.781 1.60537C69.1847 1.11719 69.687 0.72758 70.2878 0.436548C70.8887 0.145516 71.5881 0 72.3861 0C73.1841 0 73.8835 0.145516 74.4843 0.436548C75.0852 0.72758 75.5874 1.11719 75.9911 1.60537C76.3948 2.09355 76.6952 2.65684 76.8924 3.29524C77.0989 3.92424 77.2022 4.58141 77.2022 5.26674C77.2022 5.95208 77.0989 6.61394 76.8924 7.25234C76.6952 7.88134 76.3948 8.43994 75.9911 8.92812C75.5874 9.4163 75.0852 9.80591 74.4843 10.0969C73.8835 10.3786 73.1841 10.5194 72.3861 10.5194C71.5881 10.5194 70.8887 10.3786 70.2878 10.0969C69.687 9.80591 69.1847 9.4163 68.781 8.92812C68.3773 8.43994 68.0722 7.88134 67.8657 7.25234C67.6685 6.61394 67.57 5.95208 67.57 5.26674Z" fill="white"/>
+<line x1="13.8923" y1="4.80203" x2="34.5303" y2="4.80203" stroke="white" stroke-width="0.915343"/>
+    </svg>
+  </a>
+  <a class="nav-link nav-contact" href="mailto:hello@spaziozeno.com" title="hello@spaziozeno.com">Contact</a>
+</header>
+
+<div class="about-backdrop" id="aboutBackdrop"></div>
+<section class="about" id="about" aria-hidden="true" aria-label="About">
+  <div class="about__text about__fade">
+    <p>We are a small design studio in San Zeno, a town near Brescia, in the north of Italy. We work with people who have an idea and want to share it with the world. Some are just starting out. Others are big companies that work in many different countries. We give every project the same care, big or small. We listen, we ask a lot of questions and we stay with you from the first coffee together to the day your project goes live.</p>
+    <p>First we help you understand your brand: who you are, who you want to talk to and why people should choose you. Then we make your website, your logo and your app, and we make sure they all look and speak the same way. If you need it, we can also take the photos and help more people find you on the internet. We want to make things that look good, that work well and that help your business grow, today and tomorrow.</p>
+  </div>
+  <p class="about__services about__fade">Brand Strategy<br>Website Design<br>Branding<br>Digital Product Design<br>Photography<br>Performance Marketing</p>
+  <div class="about__media" id="aboutMedia">
+    <div class="about__slide" role="img" aria-label="Image placeholder"></div>
+  </div>
+  <div class="about__arrows about__fade">
+    <button class="prev" type="button" aria-label="Previous image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2.86451" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2.86451" stroke-linecap="square"/></svg></button>
+    <button class="next" type="button" aria-label="Next image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2.86451" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2.86451" stroke-linecap="square"/></svg></button>
+  </div>
+</section>
+
+<section class="hero" aria-label="Spazio Zeno">
+  <h1 class="hero__title"><span class="hero__line">©SPAZIOZENO</span></h1>
+  <p class="hero__services">Website Design<br>Branding<br>Digital Product Design</p>
+  <div class="view-toggle" role="group" aria-label="View">
+    <button type="button" data-mode="immersive" aria-pressed="false" aria-label="Immersive grid"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9.25 4V20" stroke="white" stroke-width="1.5"/><path d="M14.75 4V20" stroke="white" stroke-width="1.5"/><path d="M4 9.25H20" stroke="white" stroke-width="1.5"/><path d="M4 14.75H20" stroke="white" stroke-width="1.5"/><path d="M20.25 3.75H3.75V20.25H20.25V3.75Z" stroke="white" stroke-width="1.5" stroke-linecap="square"/></svg></button>
+    <button type="button" data-mode="static" aria-pressed="true" aria-label="Grid"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.75 3.75H10.25V10.25H3.75V3.75Z" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M13.75 3.75H20.25V10.25H13.75V3.75Z" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M3.75 13.75H10.25V20.25H3.75V13.75Z" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M13.75 13.75H20.25V20.25H13.75V13.75Z" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+  </div>
+</section>
+
+<main class="gallery" aria-label="Projects">
+  <figure class="card"><div class="card__media"></div></figure>
+  <figure class="card"><div class="card__media"></div></figure>
+  <figure class="card"><div class="card__media"></div></figure>
+  <figure class="card"><div class="card__media"></div></figure>
+  <figure class="card is-wide"><div class="card__media"></div></figure>
+  <figure class="card"><div class="card__media"></div></figure>
+  <figure class="card"><div class="card__media"></div></figure>
+  <figure class="card is-wide"><div class="card__media"></div></figure>
+  <figure class="card"><div class="card__media"></div></figure>
+</main>
+
+<div class="immersive" aria-hidden="true">
+<!-- Osmo Supply · Infinite Draggable Grid (Masonary) — markup invariato, immagini di Spazio Zeno -->
+<section data-infinite-grid-status="loading" data-infinite-grid-init="" class="infinite-grid">
+  <div data-infinite-grid-collection="" class="infinite-grid__collection">
+    <div data-infinite-grid-list="" class="infinite-grid__list">
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+      <div data-infinite-grid-item="" class="infinite-grid__item">
+        <div data-infinite-grid-card="" class="infinite-grid__card">
+          <div class="infinite-grid__card-img" role="img" aria-label="Project placeholder"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/Observer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+/* ---------- Osmo Supply · Infinite Draggable Grid (Masonary) — JS invariato ---------- */
+gsap.registerPlugin(Observer);
+
+function initInfiniteCardsGrid() {
+  const wrappers = document.querySelectorAll('[data-infinite-grid-init]');
+
+  const wheelSpeed = 0.6; // wheel/trackpad speed
+  const dragSpeed = 1.2; // drag speed
+  const gridOverscan = 1; // extra rows and columns generated outside the viewport
+  const startOffsetY = 0.33; // vertical offset between columns
+  const positionLerp = 0.05; // movement smoothing amount
+  const xToYInfluence = 0.2; // horizontal movement influence on vertical movement
+  const columnSpeedPattern = [1, 1, 0.9]; // column parallax speed pattern
+  const minCardScale = 0.5; // minimum card scale while moving
+  const scaleLerp = 0.02; // scale animation smoothing amount
+
+  wrappers.forEach((wrapper) => {
+    const collection = wrapper.querySelector('[data-infinite-grid-collection]');
+    const sourceList = wrapper.querySelector('[data-infinite-grid-list]');
+    const originalItems = Array.from(sourceList.querySelectorAll('[data-infinite-grid-item]')).map((item) => item.cloneNode(true));
+
+    if (!collection || !sourceList || !originalItems.length) return;
+
+    let observer;
+    let cards = [];
+    let cardElements = [];
+    const timers = {};
+    const size = {};
+    const pos = {};
+    const scale = {current: 1, target: 1};
+
+    function setStatus(status) {
+      wrapper.setAttribute('data-infinite-grid-status', status);
+    }
+
+    function wrapValue(value, size) {
+      return ((value % size) + size) % size;
+    }
+
+    function createColumnSpeeds(columns) {
+      return Array.from({length: columns}, (_, i) => columnSpeedPattern[i % columnSpeedPattern.length]);
+    }
+
+    function createItemIndexes(columns, rows) {
+      const total = originalItems.length;
+      const indexes = Array.from({length: rows}, () => []);
+      const used = Array(total).fill(0);
+      const centerColumn = Math.floor(columns / 2);
+      const centerRow = Math.floor(rows / 2);
+      const cells = [];
+
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++) {
+          cells.push({
+            row,
+            column,
+            distance: Math.abs(row - centerRow) + Math.abs(column - centerColumn)
+          });
+        }
+      }
+
+      cells.sort((a, b) => a.distance - b.distance);
+
+      cells.forEach(({row, column}) => {
+        const blocked = [
+          indexes[row][column - 1],
+          indexes[row][column + 1],
+          row > 0 ? indexes[row - 1][column] : undefined,
+          row < rows - 1 ? indexes[row + 1][column] : undefined,
+          row > 0 ? indexes[row - 1][column - 1] : undefined,
+          row > 0 ? indexes[row - 1][column + 1] : undefined,
+          row < rows - 1 ? indexes[row + 1][column - 1] : undefined,
+          row < rows - 1 ? indexes[row + 1][column + 1] : undefined
+        ];
+
+        const seed = (row * 17 + column * 31) % total;
+        let bestIndex = 0;
+        let bestScore = Infinity;
+
+        for (let i = 0; i < total; i++) {
+          const itemIndex = (i + seed) % total;
+          let score = used[itemIndex] * 10 + Math.abs(itemIndex - seed) * 0.01;
+
+          if (total > 1 && blocked.includes(itemIndex)) score += 1000;
+
+          if (score < bestScore) {
+            bestScore = score;
+            bestIndex = itemIndex;
+          }
+        }
+
+        indexes[row][column] = bestIndex;
+        used[bestIndex]++;
+      });
+
+      return indexes;
+    }
+
+    function buildGrid() {
+      if (observer) observer.kill();
+      clearTimeout(timers.resize);
+      clearTimeout(timers.scroll);
+      clearTimeout(timers.scale);
+      gsap.ticker.remove(updateGrid);
+
+      setStatus('loading');
+      sourceList.innerHTML = '';
+
+      const measureItem = originalItems[0].cloneNode(true);
+      measureItem.style.position = 'absolute';
+      measureItem.style.visibility = 'hidden';
+      measureItem.style.pointerEvents = 'none';
+      wrapper.appendChild(measureItem);
+
+      const rect = measureItem.getBoundingClientRect();
+      size.itemW = rect.width;
+      size.itemH = rect.height;
+      measureItem.remove();
+
+      if (!size.itemW || !size.itemH) return;
+
+      const columns = Math.max(1, Math.ceil(wrapper.clientWidth / size.itemW) + gridOverscan * 2);
+      const rows = Math.max(Math.ceil(wrapper.clientHeight / size.itemH) + gridOverscan * 2, Math.ceil(originalItems.length / columns));
+      const itemIndexes = createItemIndexes(columns, rows);
+      const columnSpeeds = createColumnSpeeds(columns);
+      const fragment = document.createDocumentFragment();
+      const centerColumn = Math.floor(columns / 2);
+      const centerRow = Math.floor(rows / 2);
+
+      size.totalW = columns * size.itemW;
+      size.totalH = rows * size.itemH;
+      cards = [];
+      cardElements = [];
+
+      gsap.set(collection, {x: 0, y: 0, force3D: true});
+
+      collection.style.width = `${size.totalW}px`;
+      collection.style.height = `${size.totalH}px`;
+
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++) {
+          const item = originalItems[itemIndexes[row][column]].cloneNode(true);
+          const card = item.querySelector('[data-infinite-grid-card]');
+
+          cards.push({
+            baseX: column * size.itemW,
+            baseY: row * size.itemH,
+            startY: (column - centerColumn) * size.itemH * startOffsetY,
+            ySpeed: columnSpeeds[column],
+            xSetter: gsap.quickSetter(item, 'x', 'px'),
+            ySetter: gsap.quickSetter(item, 'y', 'px')
+          });
+
+          if (card) cardElements.push(card);
+          if (cards.length > originalItems.length) item.setAttribute('aria-hidden', 'true');
+
+          fragment.appendChild(item);
+        }
+      }
+
+      sourceList.appendChild(fragment);
+
+      gsap.set(cardElements, {
+        force3D: true
+      });
+
+      pos.startX = wrapper.clientWidth * 0.5 - centerColumn * size.itemW - size.itemW * 0.5;
+      pos.startY = wrapper.clientHeight * 0.5 - centerRow * size.itemH - size.itemH * 0.5;
+      pos.x = pos.startX;
+      pos.y = pos.startY;
+      pos.targetX = pos.x;
+      pos.targetY = pos.y;
+      scale.current = 1;
+      scale.target = 1;
+
+      updateGrid();
+      gsap.ticker.add(updateGrid);
+
+      requestAnimationFrame(() => {
+        setStatus('idle');
+      });
+
+      observer = Observer.create({
+        target: wrapper,
+        type: 'wheel,touch,pointer',
+        preventDefault: true,
+        dragMinimum: 3,
+        onPress() { setStatus('dragging'); },
+        onRelease() { setStatus('idle'); },
+        onStop() { setStatus('idle'); },
+        onChange: handleMovement
+      });
+    }
+
+    function updateGrid() {
+      pos.x += (pos.targetX - pos.x) * positionLerp;
+      pos.y += (pos.targetY - pos.y) * positionLerp;
+      scale.current += (scale.target - scale.current) * scaleLerp;
+
+      const offsetX = size.itemW * gridOverscan;
+      const offsetY = size.itemH * gridOverscan;
+      const scrollY = pos.y - pos.startY;
+
+      cards.forEach(({baseX, baseY, startY, ySpeed, xSetter, ySetter}) => {
+        xSetter(wrapValue(baseX + pos.x + offsetX, size.totalW) - offsetX);
+        ySetter(wrapValue(baseY + pos.startY + startY + scrollY * ySpeed + offsetY, size.totalH) - offsetY);
+      });
+
+      gsap.set(cardElements, {scale: scale.current});
+    }
+
+    function handleMovement(self) {
+      const isWheel = self.event.type === 'wheel';
+      const speed = isWheel ? wheelSpeed : dragSpeed;
+      const deltaX = gsap.utils.clamp(-80, 80, self.deltaX * speed);
+      const deltaY = gsap.utils.clamp(-80, 80, self.deltaY * speed);
+      const moveX = isWheel ? -deltaX : deltaX;
+      const moveY = isWheel ? -deltaY : deltaY;
+      const strength = gsap.utils.clamp(0, 1, Math.max(Math.abs(deltaX), Math.abs(deltaY)) / 80);
+
+      if (isWheel) {
+        setStatus('scrolling');
+
+        clearTimeout(timers.scroll);
+        timers.scroll = setTimeout(() => {
+          setStatus('idle');
+        }, 200);
+      }
+
+      scale.target = gsap.utils.interpolate(1, minCardScale, strength);
+
+      clearTimeout(timers.scale);
+      timers.scale = setTimeout(() => {
+        scale.target = 1;
+      }, 120);
+
+      pos.targetX += moveX;
+      pos.targetY += moveY + moveX * xToYInfluence;
+    }
+
+    function handleMouseLeave() {
+      setStatus('idle');
+      scale.target = 1;
+
+      if (observer) {
+        observer.disable();
+        observer.enable();
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      clearTimeout(timers.resize);
+      timers.resize = setTimeout(buildGrid, 200);
+    });
+
+    document.documentElement.addEventListener('mouseleave', handleMouseLeave);
+
+    buildGrid();
+  });
+}
+
+// Initialize Infinite Cards Grid (Masonary)
+document.addEventListener('DOMContentLoaded', () => {
+  initInfiniteCardsGrid();
+});
+</script>
+
+<script>
+/* ---------- Spazio Zeno: statica di default, immersiva al clic, About (curva osmo dalla vault) ---------- */
+(() => {
+  const html = document.documentElement;
+  const body = document.body;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const osmo = (t) => { /* cubic-bezier(0.625, 0.05, 0, 1) */
+    const cx = 3 * .625, bx = 3 * (0 - .625) - cx, ax = 1 - cx - bx;
+    const cy = 3 * .05, by = 3 * (1 - .05) - cy, ay = 1 - cy - by;
+    let x = t;
+    for (let i = 0; i < 8; i++) { const fx = ((ax * x + bx) * x + cx) * x - t; const d = (3 * ax * x + 2 * bx) * x + cx; if (Math.abs(fx) < 1e-5 || !d) break; x -= fx / d; }
+    x = Math.min(1, Math.max(0, x));
+    return ((ay * x + by) * x + cy) * x;
+  };
+
+  /* Smooth scroll (Lenis, come nei prototipi DPL e MCar) */
+  let lenis = null;
+  try {
+    if (window.Lenis && !reduce) {
+      lenis = new Lenis({lerp: .09, smoothWheel: true});
+      const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+    }
+  } catch (e) {}
+  const scrollTop = () => new Promise((resolve) => {
+    if (window.scrollY < 2) return resolve();
+    if (lenis) lenis.scrollTo(0, {duration: 1, easing: osmo, onComplete: resolve});
+    else { window.scrollTo({top: 0, behavior: reduce ? 'auto' : 'smooth'}); setTimeout(resolve, reduce ? 0 : 700); }
+  });
+
+  /* Entrata: titolo dalla maschera, servizi e toggle in dissolvenza */
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
+    .then(() => requestAnimationFrame(() => requestAnimationFrame(() => body.classList.add('is-ready'))));
+
+  /* Card statiche: la foto si scopre dal basso quando entra (sfalsata per colonna) */
+  const cards = [...document.querySelectorAll('.gallery .card')];
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      const i = cards.indexOf(en.target);
+      const cols = getComputedStyle(document.querySelector('.gallery')).gridTemplateColumns.split(' ').length;
+      en.target.querySelector('.card__media').style.transitionDelay = (reduce ? 0 : (i % cols) * 0.08 + 0.15) + 's';
+      en.target.classList.add('is-in');
+      io.unobserve(en.target);
+    });
+  }, {threshold: 0.12});
+  cards.forEach((c) => io.observe(c));
+
+  /* Modalità immersiva: la griglia infinita di Osmo entra sotto il mega logo, header e toggle restano */
+  const grid = document.querySelector('.infinite-grid');
+  const layer = document.querySelector('.immersive');
+  const toggles = document.querySelectorAll('.view-toggle button');
+  let immersive = false;
+  let busy = false;
+  function setPressed(mode) { toggles.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode))); }
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  /* Le immagini della griglia immersiva sono «lazy» e il livello è nascosto: senza questo il browser le
+     caricava e decodificava tutte al primo clic (il piccolo scatto). Ora si preparano in background dopo il caricamento. */
+  let warmed = null;
+  function warmGrid() {
+    if (warmed) return warmed;
+    const imgs = [...grid.querySelectorAll('.infinite-grid__card-img')];
+    imgs.forEach((img) => { img.loading = 'eager'; });
+    const unique = [...new Map(imgs.map((i) => [i.getAttribute('src'), i])).values()];
+    warmed = (async () => {
+      for (let i = 0; i < unique.length; i += 6) {
+        await Promise.all(unique.slice(i, i + 6).map((img) => (img.decode ? img.decode().catch(() => {}) : Promise.resolve())));
+      }
+    })();
+    return warmed;
+  }
+  const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 400));
+  window.addEventListener('load', () => idle(() => warmGrid(), {timeout: 1500}));
+  window.addEventListener('resize', () => { warmed = null; setTimeout(() => idle(() => warmGrid()), 400); });
+
+  function wave() {
+    const imgs = [...grid.querySelectorAll('.infinite-grid__card-img')];
+    imgs.forEach((img) => {
+      const r = img.closest('[data-infinite-grid-item]').getBoundingClientRect();
+      const x = Math.min(1, Math.max(0, (r.left + r.width / 2) / innerWidth));
+      const y = Math.min(1, Math.max(0, (r.top + r.height / 2) / innerHeight));
+      img.style.transitionDelay = (reduce ? 0 : x * 0.45 + y * 0.12).toFixed(3) + 's';
+    });
+    layer.getBoundingClientRect();
+    layer.classList.remove('is-wave-start');
+    setTimeout(() => imgs.forEach((img) => { img.style.transitionDelay = ''; }), 2000);
+  }
+  async function enterImmersive() {
+    if (immersive || busy) return;
+    busy = true; immersive = true; setPressed('immersive');
+    closeAbout();
+    await scrollTop();
+    if (lenis) lenis.stop();
+    await Promise.race([warmGrid(), wait(600)]);
+    /* la griglia di Osmo è già costruita sotto: niente ricostruzione, le immagini salgono a onda */
+    layer.classList.add('is-wave-start');
+    html.classList.add('is-immersive');
+    layer.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(wave);
+    setTimeout(() => { busy = false; }, 900);
+  }
+  function exitImmersive() {
+    if (!immersive || busy) return;
+    busy = true; immersive = false; setPressed('static');
+    closeAbout();
+    html.classList.remove('is-immersive');
+    layer.setAttribute('aria-hidden', 'true');
+    window.scrollTo(0, 0);
+    if (lenis) { lenis.scrollTo(0, {immediate: true}); lenis.start(); }
+    setTimeout(() => { busy = false; }, 800);
+  }
+  toggles.forEach((b) => b.addEventListener('click', () => (b.dataset.mode === 'immersive' ? enterImmersive() : exitImmersive())));
+
+  /* About: tendina sotto l'header (0,8 s), fascia dell'header nera, testi solo in dissolvenza */
+  const aboutBtn = document.querySelector('.nav-about');
+  const about = document.getElementById('about');
+  const backdrop = document.getElementById('aboutBackdrop');
+  let aboutOpen = false;
+  let closeTimer = null;
+  function openAbout() {
+    if (aboutOpen) return;
+    clearTimeout(closeTimer);
+    aboutOpen = true;
+    body.classList.remove('about-closing');
+    body.classList.add('about-open');
+    aboutBtn.setAttribute('aria-expanded', 'true');
+    about.setAttribute('aria-hidden', 'false');
+    if (lenis && !immersive) lenis.stop();
+  }
+  function closeAbout() {
+    if (!aboutOpen) return;
+    aboutOpen = false;
+    body.classList.add('about-closing');
+    body.classList.remove('about-open');
+    aboutBtn.setAttribute('aria-expanded', 'false');
+    about.setAttribute('aria-hidden', 'true');
+    if (lenis && !immersive) lenis.start();
+    closeTimer = setTimeout(() => body.classList.remove('about-closing'), 650);
+  }
+  aboutBtn.addEventListener('click', () => (aboutOpen ? closeAbout() : openAbout()));
+  backdrop.addEventListener('click', closeAbout);
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (aboutOpen) closeAbout(); else if (immersive) exitImmersive();
+  });
+  document.querySelector('.logo').addEventListener('click', (e) => {
+    e.preventDefault();
+    closeAbout();
+    if (immersive) exitImmersive(); else scrollTop();
+  });
+
+  /* Slider dell'About: la nuova foto si scopre dal lato della freccia (0,9 s) */
+  const media = document.getElementById('aboutMedia');
+  const slides = [0, 1, 2, 3, 4]; /* segnaposto: le foto vere arriveranno dopo */
+  let index = 0;
+  let sliding = false;
+  const prevBtn = document.querySelector('.about__arrows .prev');
+  const nextBtn = document.querySelector('.about__arrows .next');
+  function updateArrows() { prevBtn.disabled = index === 0; nextBtn.disabled = index === slides.length - 1; }
+  updateArrows();
+  function go(dir) {
+    if (sliding) return;
+    const to = index + dir;
+    if (to < 0 || to > slides.length - 1) return;
+    sliding = true;
+    index = to;
+    updateArrows();
+    const current = media.querySelector('.about__slide:last-child');
+    const next = document.createElement('div');
+    next.className = 'about__slide ' + (index % 2 ? 'is-alt ' : '') + (dir > 0 ? 'is-entering-next' : 'is-entering-prev');
+    next.setAttribute('role', 'img');
+    next.setAttribute('aria-label', 'Image placeholder');
+    media.appendChild(next);
+    next.getBoundingClientRect();
+    next.classList.add('is-moving');
+    next.classList.remove('is-entering-next', 'is-entering-prev');
+    const done = () => { if (current && current !== next) current.remove(); next.classList.remove('is-moving'); sliding = false; };
+    if (reduce) done(); else setTimeout(done, 920);
+  }
+  prevBtn.addEventListener('click', () => go(-1));
+  nextBtn.addEventListener('click', () => go(1));
+})();
+</script>
+</body>
+</html>
