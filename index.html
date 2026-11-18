@@ -141,8 +141,8 @@ body.about-open .about__fade{opacity:1;transition:opacity .7s var(--osmo)}
 body.about-open .about__text{transition-delay:.25s}
 body.about-open .about__services{transition-delay:.32s}
 body.about-open .about__arrows{transition-delay:.45s}
-/* Contatti in basso a sinistra, sulla stessa riga delle frecce (Figma 1:482): etichetta 10 px grigia, dato 18 px */
-.about__info{grid-column:1;grid-row:2;align-self:start;margin:calc(3 * var(--u)) 0 0;display:grid;grid-template-columns:1fr 1fr;column-gap:calc(20 * var(--u))}
+/* Contatti in basso a sinistra, col fondo allineato allo spigolo inferiore della foto (Figma 1:482): etichetta 10 px grigia, dato 18 px */
+.about__info{grid-column:1;grid-row:1;align-self:end;margin:0 0 -5px;display:grid;grid-template-columns:1fr 1fr;column-gap:calc(20 * var(--u))}
 .about__info div{margin:0}
 .about__info dt{font-size:10px;line-height:1.4;text-transform:uppercase;color:#737373}
 .about__info dd{margin:0;font-size:18px;line-height:1.4}
@@ -278,8 +278,8 @@ body.about-open .about__info{transition-delay:.4s}
     <div class="about__slide" role="img" aria-label="Image placeholder"></div>
   </div>
   <div class="about__arrows about__fade">
-    <button class="prev" type="button" aria-label="Previous image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2.86451" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2.86451" stroke-linecap="square"/></svg></button>
-    <button class="next" type="button" aria-label="Next image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2.86451" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2.86451" stroke-linecap="square"/></svg></button>
+    <button class="prev" type="button" aria-label="Previous image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2" stroke-linecap="square"/></svg></button>
+    <button class="next" type="button" aria-label="Next image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2" stroke-linecap="square"/></svg></button>
   </div>
   <dl class="about__info about__fade">
     <div><dt>Come for a coffee</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Leonardo+da+Vinci+2+San+Zeno+Naviglio+BS" target="_blank" rel="noopener">Via Leonardo da Vinci, 2</a></dd></div>
