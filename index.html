@@ -72,6 +72,7 @@ html.is-immersive .hero{position:fixed;inset:0 0 auto 0;mix-blend-mode:differenc
 html.is-immersive .view-toggle{pointer-events:auto}
 
 /* Galleria statica — 3 colonne da 463, 6 px tra le card, 20 px ai lati */
+.gallery-sentinel{height:1px}
 .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 6px;padding:0 var(--pad) var(--pad);align-items:start;transition:opacity .8s var(--osmo)}
 .card{position:relative;display:block;margin:0}
 .card__frame{position:relative;aspect-ratio:1}
@@ -288,6 +289,7 @@ body.about-open .about__arrows{transition-delay:.45s}
   <figure class="card is-wide"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_08.JPG</figcaption></figure>
   <figure class="card"><div class="card__frame"><div class="card__media"></div></div><figcaption class="card__name">PROJECT_09.JPG</figcaption></figure>
 </main>
+<div class="gallery-sentinel" aria-hidden="true"></div>
 
 <div class="immersive" aria-hidden="true">
 <!-- Osmo Supply · Infinite Draggable Grid (Masonary) — markup invariato, immagini di Spazio Zeno -->
@@ -689,6 +691,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, {threshold: 0.12});
   cards.forEach((c) => io.observe(c));
+
+  /* Scroll infinito: quando si arriva in fondo, la galleria si allunga ripetendo le 9 card (nomi che continuano) */
+  const gallery = document.querySelector('.gallery');
+  const source = cards.map((c) => c.cloneNode(true));
+  let count = cards.length;
+  function addBatch() {
+    const frag = document.createDocumentFragment();
+    source.forEach((tpl) => {
+      count += 1;
+      const card = tpl.cloneNode(true);
+      card.classList.remove('is-in');
+      const media = card.querySelector('.card__media');
+      if (media) media.style.transitionDelay = '';
+      const name = card.querySelector('.card__name');
+      if (name) name.textContent = 'PROJECT_' + String(count).padStart(2, '0') + '.JPG';
+      frag.appendChild(card);
+      cards.push(card);
+    });
+    gallery.appendChild(frag);
+    cards.slice(-source.length).forEach((c) => io.observe(c));
+    if (lenis) lenis.resize();
+  }
+  const sentinel = document.querySelector('.gallery-sentinel');
+  function fill() {
+    /* aggiunge card finché il fondo della galleria non è almeno 1200 px sotto lo schermo */
+    let guard = 0;
+    while (!html.classList.contains('is-immersive') && sentinel.getBoundingClientRect().top < innerHeight + 1200 && guard++ < 4) addBatch();
+  }
+  const more = new IntersectionObserver((entries) => {
+    if (entries.some((en) => en.isIntersecting)) fill();
+  }, {rootMargin: '0px 0px 1200px 0px'});
+  more.observe(sentinel);
+  window.addEventListener('scroll', () => { if (sentinel.getBoundingClientRect().top < innerHeight + 1200) fill(); }, {passive: true});
 
   /* Modalità immersiva: la griglia infinita di Osmo entra sotto il mega logo, header e toggle restano */
   const grid = document.querySelector('.infinite-grid');
