@@ -551,9 +551,10 @@ function initInfiniteCardsGrid() {
   const scaleLerp = 0.02; // scale animation smoothing amount
   const coarse = window.matchMedia('(pointer: coarse)').matches; // Spazio Zeno: telefoni e tablet
   /* Spazio Zeno — touch: la griglia segue il dito e, al rilascio, prosegue per inerzia in base alla velocità dello swipe */
-  /* il movimento lento resta quello originale (stessa morbidezza positionLerp e stessa velocità dragSpeed): cambia solo l'inerzia */
+  const touchLerp = 0.04; // morbidezza su touch (più basso = più lento e fluido)
+  const touchDrag = 1; // velocità del trascinamento su touch
   const touchFriction = 0.95; // decelerazione dell'inerzia per fotogramma (più alto = scivola di più)
-  const touchMaxFling = 90; // velocità massima al rilascio, px per fotogramma
+  const touchMaxFling = 70; // velocità massima al rilascio, px per fotogramma
 
   wrappers.forEach((wrapper) => {
     const collection = wrapper.querySelector('[data-infinite-grid-collection]');
@@ -758,7 +759,7 @@ function initInfiniteCardsGrid() {
       } else {
         settled = false;
         /* stessa velocità a 30, 60 o 120 fotogrammi al secondo */
-        const pl = 1 - Math.pow(1 - positionLerp, k);
+        const pl = 1 - Math.pow(1 - (coarse ? touchLerp : positionLerp), k);
         pos.x += dx * pl;
         pos.y += dy * pl;
         scale.current += ds * (1 - Math.pow(1 - scaleLerp, k));
@@ -780,7 +781,7 @@ function initInfiniteCardsGrid() {
     function handleMovement(self) {
       const isWheel = self.event.type === 'wheel';
       const touchMove = coarse && !isWheel;
-      const speed = isWheel ? wheelSpeed : dragSpeed;
+      const speed = isWheel ? wheelSpeed : (touchMove ? touchDrag : dragSpeed);
       const lim = touchMove ? 400 : 80; /* su touch nessun tetto basso: uno swipe rapido deve poter correre */
       const deltaX = gsap.utils.clamp(-lim, lim, self.deltaX * speed);
       const deltaY = gsap.utils.clamp(-lim, lim, self.deltaY * speed);
