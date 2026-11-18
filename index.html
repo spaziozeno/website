@@ -75,20 +75,25 @@ html.is-immersive .immersive{opacity:1;visibility:visible;pointer-events:auto;tr
 /* About — tendina sotto l'header (Figma: y 46, alta 520, #111) */
 .about-backdrop{position:fixed;inset:0;z-index:24;background:rgba(17,17,17,.6);opacity:0;pointer-events:none;transition:opacity .7s var(--osmo)}
 body.about-open .about-backdrop{opacity:1;pointer-events:auto}
-.about{position:fixed;left:0;right:0;top:var(--header);height:calc(520.5 * var(--u));min-height:420px;z-index:25;background:var(--menu);clip-path:inset(0 0 100% 0);transition:clip-path .8s var(--osmo);visibility:hidden}
+.about{position:fixed;left:0;right:0;top:var(--header);z-index:25;background:var(--menu);clip-path:inset(0 0 100% 0);transition:clip-path .8s var(--osmo);visibility:hidden;
+  /* Altezza dal contenuto: il testo non si taglia mai. Minimo = altezza Figma; se lo schermo è basso il pannello scorre al suo interno */
+  min-height:min(calc(520.5 * var(--u)), calc(100svh - var(--header)));max-height:calc(100svh - var(--header));overflow-y:auto;overscroll-behavior:contain;
+  display:grid;align-items:start;align-content:start;
+  grid-template-columns:calc(516 * var(--u)) calc(145.4 * var(--u)) 1fr calc(407.8 * var(--u));grid-template-rows:auto 1fr;
+  padding:calc(11.4 * var(--u)) var(--pad) calc(47.9 * var(--u))}
 body.about-open .about{clip-path:inset(0 0 0 0);visibility:visible}
 body.about-closing .about{visibility:visible;transition-duration:.6s}
 /* Misure del Figma (About Panel 1:471), scalate su 1440 */
-.about__text{position:absolute;left:var(--pad);top:calc(11.4 * var(--u));width:calc(516 * var(--u));margin:0;font-size:18px;line-height:1.4}
+.about__text{grid-column:1;grid-row:1 / span 2;margin:0;font-size:18px;line-height:1.4}
 .about__text p{margin:0}
 .about__text p + p{margin-top:1.4em}
-.about__services{position:absolute;left:calc(681.4 * var(--u));top:calc(11.4 * var(--u));margin:0;font-size:18px;line-height:1.4}
-.about__media{position:absolute;left:calc(1012.4 * var(--u));top:calc(18.7 * var(--u));width:calc(407.8 * var(--u));height:calc(405.1 * var(--u));overflow:hidden}
+.about__services{grid-column:3;grid-row:1;margin:0;font-size:18px;line-height:1.4}
+.about__media{grid-column:4;grid-row:1;position:relative;margin-top:calc(7.3 * var(--u));width:100%;aspect-ratio:407.8/405.1;overflow:hidden}
 .about__slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 0 0)}
 .about__slide.is-entering-next{clip-path:inset(0 0 0 100%)}
 .about__slide.is-entering-prev{clip-path:inset(0 100% 0 0)}
 .about__slide.is-moving{transition:clip-path .9s var(--osmo)}
-.about__arrows{position:absolute;left:calc(1332.8 * var(--u));top:calc(426.8 * var(--u));display:flex}
+.about__arrows{grid-column:4;grid-row:2;justify-self:end;margin-top:calc(3 * var(--u));display:flex}
 .about__arrows button{width:calc(45.8 * var(--u));height:calc(45.8 * var(--u));min-width:32px;min-height:32px;display:block;transition:opacity .4s var(--osmo)}
 .about__arrows button + button{margin-left:calc(-5.2 * var(--u))}
 .about__arrows button:disabled{opacity:.2;cursor:default}
@@ -102,6 +107,16 @@ body.about-open .about__arrows{transition-delay:.45s}
 
 /* Tablet: 2 colonne */
 @media (max-width:1023px){ .gallery{grid-template-columns:repeat(2,1fr)} }
+/* About su tablet: testo a sinistra, immagine e frecce a destra, servizi sotto il testo */
+@media (min-width:768px) and (max-width:1023px){
+  .about{grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;column-gap:32px;padding:12px var(--pad) 24px}
+  .about__text{grid-column:1;grid-row:1 / span 2;font-size:16px}
+  .about__services{grid-column:1;grid-row:3;margin-top:24px;font-size:16px}
+  .about__media{grid-column:2;grid-row:1;margin-top:6px}
+  .about__arrows{grid-column:2;grid-row:2;margin-top:4px}
+  .about__arrows button{width:46px;height:46px}
+  .about__arrows button + button{margin-left:-5px}
+}
 /* Mobile 390 — come «Homepage / Mobile / 390w / Grid Large» */
 @media (max-width:767px){
   .hero{height:322px}
@@ -109,11 +124,11 @@ body.about-open .about__arrows{transition-delay:.45s}
   .hero__services{left:var(--pad);top:calc(96px + (100vw - 2 * var(--pad)) * 0.166 + 12px)}
   .view-toggle{top:auto;bottom:26px}
   .gallery{grid-template-columns:1fr}
-  .about{height:auto;min-height:0;max-height:calc(100svh - var(--header));overflow:auto;padding:12px var(--pad) 20px;display:flex;flex-direction:column;gap:24px}
+  .about{min-height:0;padding:12px var(--pad) 20px;display:flex;flex-direction:column;gap:24px}
   .about > *{flex-shrink:0}
-  .about__text,.about__services,.about__media,.about__arrows{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:auto}
+  .about__text,.about__services,.about__media,.about__arrows{margin-top:0;width:auto}
   .about__text,.about__services{font-size:16px}
-  .about__media{width:100%;height:auto;aspect-ratio:407.8/405.1}
+  .about__media{width:100%}
   .about__arrows button{width:46px;height:46px}
   .about__arrows button + button{margin-left:-5px}
   .about__arrows{align-self:flex-end}
@@ -213,7 +228,7 @@ body.about-open .about__arrows{transition-delay:.45s}
 </header>
 
 <div class="about-backdrop" id="aboutBackdrop"></div>
-<section class="about" id="about" aria-hidden="true" aria-label="About">
+<section class="about" id="about" data-lenis-prevent aria-hidden="true" aria-label="About">
   <div class="about__text about__fade">
     <p>We are a small design studio in San Zeno, a town near Brescia, in the north of Italy. We work with people who have an idea and want to share it with the world. Some are just starting out. Others are big companies that work in many different countries. We give every project the same care, big or small. We listen, we ask a lot of questions and we stay with you from the first coffee together to the day your project goes live.</p>
     <p>First we help you understand your brand: who you are, who you want to talk to and why people should choose you. Then we make your website, your logo and your app, and we make sure they all look and speak the same way. If you need it, we can also take the photos and help more people find you on the internet. We want to make things that look good, that work well and that help your business grow, today and tomorrow.</p>
