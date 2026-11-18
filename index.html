@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="immersive-only">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -81,6 +81,8 @@ body.is-ready .view-toggle{opacity:1}
 /* Il mega logo resta nel flusso (la pagina è già in cima): niente salto della galleria durante il passaggio */
 html.is-immersive .hero{mix-blend-mode:difference;pointer-events:none}
 html.is-immersive .view-toggle{pointer-events:auto}
+/* Per ora solo la griglia immersiva (D-436): galleria statica e interruttore nascosti, il codice resta. Per riattivarli togliere la classe immersive-only da <html> */
+html.immersive-only .view-toggle,html.immersive-only .gallery,html.immersive-only .gallery-sentinel{display:none}
 
 /* Galleria statica — 3 colonne da 463, 6 px tra le card, 20 px ai lati */
 .gallery-sentinel{height:1px}
@@ -312,12 +314,12 @@ body.about-open .about__info{transition-delay:.4s}
 </section>
 
 <main class="gallery" aria-label="Projects">
-  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-X9J9.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="eager" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_01.JPG</figcaption></figure>
-  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-XM34.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="eager" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_02.JPG</figcaption></figure>
-  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-KA3C.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="eager" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_03.JPG</figcaption></figure>
-  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-PCXF.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="eager" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_04.JPG</figcaption></figure>
-  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-NN7U.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="eager" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_05.JPG</figcaption></figure>
-  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-ECXD.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="eager" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_06.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-X9J9.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_01.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-XM34.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_02.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-KA3C.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_03.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-PCXF.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_04.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-NN7U.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_05.JPG</figcaption></figure>
+  <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-ECXD.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_06.JPG</figcaption></figure>
   <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-V3N7.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_07.JPG</figcaption></figure>
   <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-J3AP.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_08.JPG</figcaption></figure>
   <figure class="card"><div class="card__frame"><div class="card__media"><img src="img/SZ-N3M4.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false"></div></div><figcaption class="card__name">PROJECT_09.JPG</figcaption></figure>
@@ -810,7 +812,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Entrata: titolo dalla maschera, servizi e toggle in dissolvenza */
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve())
-    .then(() => requestAnimationFrame(() => requestAnimationFrame(() => body.classList.add('is-ready'))));
+    .then(() => requestAnimationFrame(() => requestAnimationFrame(() => {
+      body.classList.add('is-ready');
+      /* Griglia immersiva di default: entra a onda subito dopo il titolo */
+      if (html.classList.contains('immersive-only')) setTimeout(() => enterImmersive(), 250);
+    })));
 
   /* Card statiche: la foto si scopre dal basso quando entra (sfalsata per colonna) */
   const cards = [...document.querySelectorAll('.gallery .card')];
@@ -849,7 +855,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lenis) lenis.resize();
   }
   const sentinel = document.querySelector('.gallery-sentinel');
+  const immersiveOnly = html.classList.contains('immersive-only');
   function fill() {
+    if (immersiveOnly) return;
     /* aggiunge card finché il fondo della galleria non è almeno 1200 px sotto lo schermo */
     let guard = 0;
     while (!html.classList.contains('is-immersive') && sentinel.getBoundingClientRect().top < innerHeight + 1200 && guard++ < 4) addBatch();
@@ -991,12 +999,12 @@ document.addEventListener('DOMContentLoaded', () => {
   backdrop.addEventListener('click', closeAbout);
   window.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (aboutOpen) closeAbout(); else if (immersive) exitImmersive();
+    if (aboutOpen) closeAbout(); else if (immersive && !immersiveOnly) exitImmersive();
   });
   document.querySelector('.logo').addEventListener('click', (e) => {
     e.preventDefault();
     closeAbout();
-    if (immersive) exitImmersive(); else scrollTop();
+    if (immersive && !immersiveOnly) exitImmersive(); else if (!immersive) scrollTop();
   });
 
   /* Slider dell'About: la nuova foto si scopre dal lato della freccia (0,9 s) */
