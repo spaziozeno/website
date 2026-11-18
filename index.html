@@ -47,14 +47,14 @@ body.about-open .nav-about__label.is-close{transform:translateY(0)}
 .nav-link:focus-visible{outline:none}
 .nav-link:focus-visible::after{transform:scaleX(1);transform-origin:left center}
 .logo{position:absolute;left:50%;top:20px;transform:translateX(-50%);display:flex;align-items:center;font-size:14px;line-height:16px;text-transform:uppercase;color:#fff;white-space:nowrap;transition:opacity .6s var(--osmo)}
-/* Curva del logo: ease-in-out morbido (parte e arriva piano), più dolce della curva osmo */
-:root{--logo-ease:cubic-bezier(0.65, 0, 0.35, 1)}
+/* Curva del logo: «smooth» = CustomEase M0,0 C0.38,0.005 0.215,1 1,1 */
+:root{--logo-ease:cubic-bezier(0.38, 0.005, 0.215, 1);--logo-dur:.8s}
 /* Logo: SPAZIO — ZENO in cima, S — Z appena si scrolla. PAZIO ed ENO scivolano dietro S e Z come sotto una maschera */
 .logo__word{display:flex}
-.logo__mask{display:grid;grid-template-columns:1fr;transition:grid-template-columns 1.3s var(--logo-ease)}
+.logo__mask{display:grid;grid-template-columns:1fr;transition:grid-template-columns var(--logo-dur) var(--logo-ease)}
 .logo__clip{overflow:hidden;min-width:0}
-.logo__text{display:block;transition:transform 1.3s var(--logo-ease),opacity 1.3s var(--logo-ease)}
-.logo__dash{display:block;width:0;height:1px;margin:0 2px;background:currentColor;transition:width 1.3s var(--logo-ease),margin 1.3s var(--logo-ease)}
+.logo__text{display:block;transition:transform var(--logo-dur) var(--logo-ease),opacity var(--logo-dur) var(--logo-ease)}
+.logo__dash{display:block;width:0;height:1px;margin:0 2px;background:currentColor;transition:width var(--logo-dur) var(--logo-ease),margin var(--logo-dur) var(--logo-ease)}
 body.is-scrolled .logo__dash{width:20px;margin:0 6px}
 body.is-scrolled .logo__mask{grid-template-columns:0fr}
 body.is-scrolled .logo__text{transform:translateX(-100%);opacity:0}
