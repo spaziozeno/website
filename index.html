@@ -18,7 +18,8 @@
   --u:calc(100vw / 1440);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{background:var(--bg)}
+html{background:var(--bg);scrollbar-gutter:stable}
+/* Lo spazio della barra di scorrimento resta riservato: aprendo About (scroll bloccato) niente si sposta */
 body{margin:0;background:var(--bg);color:var(--fg);font-family:"Neue Montreal","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
