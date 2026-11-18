@@ -46,8 +46,15 @@ body.about-open .nav-about__label.is-close{transform:translateY(0)}
 }
 .nav-link:focus-visible{outline:none}
 .nav-link:focus-visible::after{transform:scaleX(1);transform-origin:left center}
-.logo{position:absolute;left:50%;top:23px;transform:translateX(-50%);display:block;width:78px;height:11px;transition:opacity .6s var(--osmo)}
-.logo svg{display:block;width:100%;height:100%}
+.logo{position:absolute;left:50%;top:20px;transform:translateX(-50%);display:flex;align-items:center;font-size:14px;line-height:16px;text-transform:uppercase;color:#fff;white-space:nowrap;transition:opacity .6s var(--osmo)}
+/* Logo: SPAZIO — ZENO in cima, S — Z appena si scrolla. PAZIO ed ENO scivolano dietro S e Z come sotto una maschera */
+.logo__word{display:flex}
+.logo__mask{display:grid;grid-template-columns:1fr;transition:grid-template-columns .9s var(--osmo)}
+.logo__clip{overflow:hidden;min-width:0}
+.logo__text{display:block;transition:transform .9s var(--osmo)}
+.logo__dash{display:block;width:20px;height:1px;margin:0 6px;background:currentColor}
+body.is-scrolled .logo__mask{grid-template-columns:0fr}
+body.is-scrolled .logo__text{transform:translateX(-100%)}
 .header-bg{position:fixed;inset:0 0 auto 0;height:var(--header);z-index:39;background:var(--menu);opacity:0;pointer-events:none;transition:opacity .6s var(--osmo)}
 body.about-open .header-bg{opacity:1;transition-duration:.5s}
 body.about-open .logo,body.about-open .nav-contact{opacity:.7}
@@ -241,16 +248,7 @@ body.about-open .about__arrows{transition-delay:.45s}
 <div class="header-bg" aria-hidden="true"></div>
 <header class="site-header">
   <button class="nav-link nav-about" type="button" aria-expanded="false" aria-controls="about" aria-label="Open About"><span class="nav-about__label is-about" aria-hidden="true">About</span><span class="nav-about__label is-close" aria-hidden="true">Close</span></button>
-  <a class="logo" href="#" aria-label="Spazio Zeno">
-    <svg width="78" height="11" viewBox="0 0 78 11" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-<path d="M6.39332 3.18258C6.31822 2.45969 6.05535 1.93865 5.60472 1.61945C5.16348 1.29087 4.59549 1.12658 3.90077 1.12658C3.61913 1.12658 3.34218 1.15474 3.06992 1.21107C2.79767 1.2674 2.55357 1.36128 2.33765 1.49271C2.13111 1.62415 1.96212 1.80252 1.83069 2.02784C1.70864 2.24376 1.64762 2.51602 1.64762 2.8446C1.64762 3.15441 1.73681 3.40789 1.91518 3.60504C2.10294 3.79281 2.34703 3.94771 2.64745 4.06976C2.95726 4.1918 3.30462 4.29507 3.68954 4.37957C4.07445 4.45467 4.46406 4.53916 4.85836 4.63305C5.26205 4.72693 5.65635 4.83958 6.04127 4.97102C6.42618 5.09306 6.76885 5.26205 7.06927 5.47798C7.37908 5.69391 7.62317 5.96616 7.80154 6.29475C7.9893 6.62333 8.08319 7.03641 8.08319 7.53398C8.08319 8.0691 7.96114 8.52912 7.71705 8.91404C7.48235 9.28956 7.17723 9.59937 6.80171 9.84346C6.42618 10.0782 6.00371 10.2472 5.53431 10.3504C5.07429 10.4631 4.61427 10.5194 4.15425 10.5194C3.59096 10.5194 3.05584 10.449 2.54888 10.3082C2.05131 10.1674 1.61007 9.95612 1.22515 9.67447C0.849627 9.38344 0.549206 9.01731 0.323891 8.57606C0.107964 8.12543 0 7.595 0 6.98477H1.2674C1.2674 7.40724 1.3472 7.77338 1.5068 8.08319C1.67578 8.38361 1.89171 8.63239 2.15458 8.82954C2.42683 9.02669 2.74134 9.17221 3.09809 9.26609C3.45483 9.35997 3.82097 9.40691 4.1965 9.40691C4.49692 9.40691 4.79734 9.37875 5.09776 9.32242C5.40757 9.26609 5.68452 9.17221 5.92861 9.04078C6.1727 8.89995 6.36985 8.71219 6.52006 8.47749C6.67027 8.24278 6.74538 7.94236 6.74538 7.57623C6.74538 7.22887 6.6515 6.94722 6.46373 6.73129C6.28536 6.51537 6.04127 6.34169 5.73146 6.21025C5.43104 6.06943 5.08837 5.95677 4.70346 5.87228C4.31854 5.78779 3.92424 5.70329 3.52055 5.6188C3.12625 5.52492 2.73664 5.42165 2.35173 5.30899C1.96681 5.18695 1.61945 5.03204 1.30965 4.84428C1.00922 4.64713 0.765133 4.39834 0.57737 4.09792C0.398996 3.78811 0.309809 3.4032 0.309809 2.94318C0.309809 2.43622 0.413078 1.99967 0.619617 1.63354C0.826156 1.25801 1.09841 0.952896 1.43639 0.718192C1.78375 0.474101 2.17335 0.295726 2.60521 0.183068C3.04645 0.0610227 3.49708 0 3.9571 0C4.47345 0 4.95224 0.0610227 5.39349 0.183068C5.83473 0.305114 6.21964 0.497571 6.54823 0.760439C6.8862 1.02331 7.14907 1.35659 7.33683 1.76028C7.53398 2.15458 7.64194 2.62868 7.66072 3.18258H6.39332Z" fill="white"/>
-<path d="M39.9641 9.16752L46.2166 1.36597H40.4429V0.239397H47.7938V1.36597L41.5554 9.16752H47.9628V10.2941H39.9641V9.16752Z" fill="white"/>
-<path d="M49.3616 0.239397H56.3041V1.36597H50.6994V4.56263H55.9239V5.68921H50.6994V9.16752H56.3463V10.2941H49.3616V0.239397Z" fill="white"/>
-<path d="M57.9563 0.239397H59.3786L64.6735 8.39299H64.7017V0.239397H65.9691V10.2941H64.5046L59.2519 2.22499H59.2237V10.2941H57.9563V0.239397Z" fill="white"/>
-<path d="M68.9078 5.26674C68.9078 5.7737 68.9735 6.27597 69.1049 6.77354C69.2364 7.26172 69.4429 7.70297 69.7245 8.09727C70.0062 8.49157 70.3676 8.81077 70.8089 9.05486C71.2501 9.28956 71.7759 9.40691 72.3861 9.40691C72.9963 9.40691 73.522 9.28956 73.9633 9.05486C74.4045 8.81077 74.766 8.49157 75.0476 8.09727C75.3293 7.70297 75.5358 7.26172 75.6672 6.77354C75.7987 6.27597 75.8644 5.7737 75.8644 5.26674C75.8644 4.75979 75.7987 4.26221 75.6672 3.77403C75.5358 3.27646 75.3293 2.83052 75.0476 2.43622C74.766 2.04192 74.4045 1.72742 73.9633 1.49271C73.522 1.24862 72.9963 1.12658 72.3861 1.12658C71.7759 1.12658 71.2501 1.24862 70.8089 1.49271C70.3676 1.72742 70.0062 2.04192 69.7245 2.43622C69.4429 2.83052 69.2364 3.27646 69.1049 3.77403C68.9735 4.26221 68.9078 4.75979 68.9078 5.26674ZM67.57 5.26674C67.57 4.58141 67.6685 3.92424 67.8657 3.29524C68.0722 2.65684 68.3773 2.09355 68.781 1.60537C69.1847 1.11719 69.687 0.72758 70.2878 0.436548C70.8887 0.145516 71.5881 0 72.3861 0C73.1841 0 73.8835 0.145516 74.4843 0.436548C75.0852 0.72758 75.5874 1.11719 75.9911 1.60537C76.3948 2.09355 76.6952 2.65684 76.8924 3.29524C77.0989 3.92424 77.2022 4.58141 77.2022 5.26674C77.2022 5.95208 77.0989 6.61394 76.8924 7.25234C76.6952 7.88134 76.3948 8.43994 75.9911 8.92812C75.5874 9.4163 75.0852 9.80591 74.4843 10.0969C73.8835 10.3786 73.1841 10.5194 72.3861 10.5194C71.5881 10.5194 70.8887 10.3786 70.2878 10.0969C69.687 9.80591 69.1847 9.4163 68.781 8.92812C68.3773 8.43994 68.0722 7.88134 67.8657 7.25234C67.6685 6.61394 67.57 5.95208 67.57 5.26674Z" fill="white"/>
-<line x1="13.8923" y1="4.80203" x2="34.5303" y2="4.80203" stroke="white" stroke-width="0.915343"/>
-    </svg>
-  </a>
+  <a class="logo" href="#" aria-label="Spazio Zeno"><span class="logo__word" aria-hidden="true">S<span class="logo__mask"><span class="logo__clip"><span class="logo__text">pazio</span></span></span></span><span class="logo__dash" aria-hidden="true"></span><span class="logo__word" aria-hidden="true">Z<span class="logo__mask"><span class="logo__clip"><span class="logo__text">eno</span></span></span></span></a>
   <a class="nav-link nav-contact" href="mailto:hello@spaziozeno.com" title="hello@spaziozeno.com">Contact</a>
 </header>
 
@@ -790,6 +788,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { busy = false; }, 800);
   }
   toggles.forEach((b) => b.addEventListener('click', () => (b.dataset.mode === 'immersive' ? enterImmersive() : exitImmersive())));
+
+  /* Logo: si stringe a S — Z appena si scrolla, torna SPAZIO — ZENO in cima */
+  const setScrolled = () => body.classList.toggle('is-scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', setScrolled, {passive: true});
+  setScrolled();
 
   /* About: tendina sotto l'header (0,8 s), fascia dell'header nera, testi solo in dissolvenza */
   const aboutBtn = document.querySelector('.nav-about');
