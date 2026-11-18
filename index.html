@@ -118,7 +118,7 @@ body.about-open .about-backdrop{opacity:1;pointer-events:auto}
 body.about-open .about{clip-path:inset(0 0 0 0);visibility:visible}
 body.about-closing .about{visibility:visible;transition-duration:.6s}
 /* Misure del Figma (About Panel 1:471), scalate su 1440 */
-.about__text{grid-column:1;grid-row:1 / span 2;margin:0;font-size:18px;line-height:1.4}
+.about__text{grid-column:1;grid-row:1;margin:0;font-size:18px;line-height:1.4}
 .about__text p{margin:0}
 .about__text p + p{margin-top:1.4em}
 .about__services{grid-column:3;grid-row:1;margin:0;font-size:18px;line-height:1.4}
@@ -138,6 +138,14 @@ body.about-open .about__fade{opacity:1;transition:opacity .7s var(--osmo)}
 body.about-open .about__text{transition-delay:.25s}
 body.about-open .about__services{transition-delay:.32s}
 body.about-open .about__arrows{transition-delay:.45s}
+/* Contatti in basso a sinistra, sulla stessa riga delle frecce (Figma 1:482): etichetta 10 px grigia, dato 18 px */
+.about__info{grid-column:1;grid-row:2;align-self:start;margin:calc(3 * var(--u)) 0 0;display:grid;grid-template-columns:1fr 1fr;column-gap:calc(20 * var(--u))}
+.about__info div{margin:0}
+.about__info dt{font-size:10px;line-height:1.4;text-transform:uppercase;color:#737373}
+.about__info dd{margin:0;font-size:18px;line-height:1.4}
+.about__info a{transition:opacity .4s var(--osmo)}
+@media (hover:hover){ .about__info a:hover{opacity:.6} }
+body.about-open .about__info{transition-delay:.4s}
 
 /* Tablet: 2 colonne */
 @media (max-width:1023px){ .gallery{grid-template-columns:repeat(2,1fr)} }
@@ -145,6 +153,8 @@ body.about-open .about__arrows{transition-delay:.45s}
 @media (min-width:768px) and (max-width:1023px){
   .about{grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr auto;column-gap:32px;padding:12px var(--pad) 24px}
   .about__text{grid-column:1;grid-row:1 / span 2;font-size:16px}
+  .about__info{grid-column:1;grid-row:4;margin-top:24px}
+  .about{grid-template-rows:auto 1fr auto auto}
   .about__services{grid-column:1;grid-row:3;margin-top:24px;font-size:16px}
   .about__media{grid-column:2;grid-row:1;margin-top:6px}
   .about__arrows{grid-column:2;grid-row:2;margin-top:4px}
@@ -160,7 +170,9 @@ body.about-open .about__arrows{transition-delay:.45s}
   .gallery{grid-template-columns:1fr}
   .about{min-height:0;padding:12px var(--pad) 20px;display:flex;flex-direction:column;gap:24px}
   .about > *{flex-shrink:0}
-  .about__text,.about__services,.about__media,.about__arrows{margin-top:0;width:auto}
+  .about__text,.about__services,.about__media,.about__arrows,.about__info{margin-top:0;width:auto}
+  .about__info{grid-template-columns:1fr;row-gap:16px}
+  .about__info dd{font-size:16px}
   .about__text,.about__services{font-size:16px}
   .about__media{width:100%}
   .about__arrows button{width:46px;height:46px}
@@ -266,6 +278,10 @@ body.about-open .about__arrows{transition-delay:.45s}
     <button class="prev" type="button" aria-label="Previous image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2.86451" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2.86451" stroke-linecap="square"/></svg></button>
     <button class="next" type="button" aria-label="Next image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2.86451" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2.86451" stroke-linecap="square"/></svg></button>
   </div>
+  <dl class="about__info about__fade">
+    <div><dt>Come for a coffee</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Via+Leonardo+da+Vinci+2+San+Zeno+Naviglio+BS" target="_blank" rel="noopener">Via Leonardo da Vinci, 2</a></dd></div>
+    <div><dt>Say hello</dt><dd><a href="mailto:hello@spaziozeno.com">hello@spaziozeno.com</a></dd></div>
+  </dl>
 </section>
 
 <section class="hero" aria-label="Spazio Zeno">
