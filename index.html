@@ -129,6 +129,10 @@ body.about-closing .about{visibility:visible;transition-duration:.6s}
 .about__text p{margin:0}
 .about__text p + p{margin-top:1.4em}
 .about__services{grid-column:3;grid-row:1;margin:0;font-size:18px;line-height:1.4}
+/* Con l'About aperto il logo torna sempre intero (SPAZIO ZENO), anche se la pagina è scorsa: i servizi si allineano al suo bordo sinistro */
+body.about-open .logo__mask{grid-template-columns:1fr}
+body.about-open .logo__text{transform:none;opacity:1}
+body.about-open .logo__dash{width:0;margin:0 2px}
 .about__media{grid-column:4;grid-row:1;position:relative;margin-top:calc(7.3 * var(--u));width:100%;aspect-ratio:407.8/405.1;overflow:hidden}
 .about__slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 0 0)}
 .about__slide.is-entering-next{clip-path:inset(0 0 0 100%)}
@@ -954,6 +958,35 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lenis && !immersive) lenis.start();
     closeTimer = setTimeout(() => body.classList.remove('about-closing'), 650);
   }
+  /* Servizi allineati al logo: il bordo sinistro dei servizi coincide sempre con quello di «SPAZIO ZENO»,
+     a ogni larghezza e a ogni zoom (il logo ha misure fisse ed è centrato, la colonna invece scala con la pagina).
+     Si misura il logo intero su una copia invisibile, così vale anche quando in pagina è ridotto a «S—Z». */
+  const services = about.querySelector('.about__services');
+  const logoEl = document.querySelector('.logo');
+  function logoFullWidth() {
+    const c = logoEl.cloneNode(true);
+    c.removeAttribute('href'); c.setAttribute('aria-hidden', 'true'); c.tabIndex = -1;
+    c.style.cssText = 'position:absolute;left:0;top:0;transform:none;visibility:hidden;pointer-events:none;transition:none';
+    c.querySelectorAll('*').forEach((n) => { n.style.transition = 'none'; });
+    c.querySelectorAll('.logo__mask').forEach((n) => { n.style.gridTemplateColumns = '1fr'; });
+    c.querySelectorAll('.logo__text').forEach((n) => { n.style.transform = 'none'; n.style.opacity = '1'; });
+    c.querySelectorAll('.logo__dash').forEach((n) => { n.style.width = '0'; n.style.margin = '0 2px'; });
+    logoEl.parentNode.appendChild(c);
+    const w = c.getBoundingClientRect().width;
+    c.remove();
+    return w;
+  }
+  function alignServices() {
+    services.style.marginLeft = '0px';
+    if (getComputedStyle(services).gridColumnStart !== '3') return; /* tablet e mobile: servizi sotto il testo */
+    const h = logoEl.parentNode.getBoundingClientRect();
+    const target = h.left + h.width / 2 - logoFullWidth() / 2;
+    services.style.marginLeft = (target - services.getBoundingClientRect().left) + 'px';
+  }
+  alignServices();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignServices);
+  window.addEventListener('resize', alignServices);
+  aboutBtn.addEventListener('click', alignServices);
   aboutBtn.addEventListener('click', () => (aboutOpen ? closeAbout() : openAbout()));
   backdrop.addEventListener('click', closeAbout);
   window.addEventListener('keydown', (e) => {
