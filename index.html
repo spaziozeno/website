@@ -550,6 +550,11 @@ function initInfiniteCardsGrid() {
   const minCardScale = 0.5; // minimum card scale while moving
   const scaleLerp = 0.02; // scale animation smoothing amount
   const coarse = window.matchMedia('(pointer: coarse)').matches; // Spazio Zeno: telefoni e tablet
+  /* Spazio Zeno — touch: la griglia segue il dito e, al rilascio, prosegue per inerzia in base alla velocità dello swipe */
+  const touchLerp = 0.2; // quanto stretto segue il dito (più alto = più diretto)
+  const touchDrag = 1; // 1 = la griglia si muove quanto il dito
+  const touchFriction = 0.95; // decelerazione dell'inerzia per fotogramma (più alto = scivola di più)
+  const touchMaxFling = 90; // velocità massima al rilascio, px per fotogramma
 
   wrappers.forEach((wrapper) => {
     const collection = wrapper.querySelector('[data-infinite-grid-collection]');
@@ -708,8 +713,8 @@ function initInfiniteCardsGrid() {
         type: 'wheel,touch,pointer',
         preventDefault: true,
         dragMinimum: 3,
-        onPress() { setStatus('dragging'); },
-        onRelease() { setStatus('idle'); },
+        onPress() { setStatus('dragging'); fling.x = 0; fling.y = 0; fling.samples.length = 0; fling.down = true; },
+        onRelease() { setStatus('idle'); fling.down = false; if (coarse) startFling(); },
         onStop() { setStatus('idle'); },
         onChange: handleMovement
       });
@@ -719,10 +724,31 @@ function initInfiniteCardsGrid() {
        quando la griglia si muove. Da ferma il ciclo non tocca il DOM, così il telefono non ridisegna nulla. */
     let settled = false;
     let lastTick = 0;
+    /* inerzia touch: campioni degli ultimi movimenti del dito e velocità residua dopo il rilascio */
+    const fling = {x: 0, y: 0, samples: [], down: false};
+    function startFling() {
+      const now = performance.now();
+      const recent = fling.samples.filter((p) => now - p.t < 100);
+      /* dito fermo prima di staccarlo: niente inerzia */
+      if (recent.length < 2 || now - recent[recent.length - 1].t > 60) { fling.x = 0; fling.y = 0; return; }
+      const dt = Math.max(8, recent[recent.length - 1].t - recent[0].t);
+      let sx = 0, sy = 0;
+      for (let i = 1; i < recent.length; i++) { sx += recent[i].dx; sy += recent[i].dy; }
+      fling.x = gsap.utils.clamp(-touchMaxFling, touchMaxFling, (sx / dt) * 16.667);
+      fling.y = gsap.utils.clamp(-touchMaxFling, touchMaxFling, (sy / dt) * 16.667);
+      settled = false;
+    }
     function updateGrid(force) {
       const now = performance.now();
       const k = lastTick ? Math.min(4, Math.max(0.25, (now - lastTick) / 16.667)) : 1;
       lastTick = now;
+      if (!fling.down && (fling.x || fling.y)) {
+        pos.targetX += fling.x * k;
+        pos.targetY += (fling.y + fling.x * xToYInfluence) * k;
+        const f = Math.pow(touchFriction, k);
+        fling.x *= f; fling.y *= f;
+        if (Math.abs(fling.x) < 0.05 && Math.abs(fling.y) < 0.05) { fling.x = 0; fling.y = 0; }
+      }
       const dx = pos.targetX - pos.x;
       const dy = pos.targetY - pos.y;
       const ds = scale.target - scale.current;
@@ -733,7 +759,7 @@ function initInfiniteCardsGrid() {
       } else {
         settled = false;
         /* stessa velocità a 30, 60 o 120 fotogrammi al secondo */
-        const pl = 1 - Math.pow(1 - positionLerp, k);
+        const pl = 1 - Math.pow(1 - (coarse ? touchLerp : positionLerp), k);
         pos.x += dx * pl;
         pos.y += dy * pl;
         scale.current += ds * (1 - Math.pow(1 - scaleLerp, k));
@@ -754,9 +780,15 @@ function initInfiniteCardsGrid() {
 
     function handleMovement(self) {
       const isWheel = self.event.type === 'wheel';
-      const speed = isWheel ? wheelSpeed : dragSpeed;
-      const deltaX = gsap.utils.clamp(-80, 80, self.deltaX * speed);
-      const deltaY = gsap.utils.clamp(-80, 80, self.deltaY * speed);
+      const touchMove = coarse && !isWheel;
+      const speed = isWheel ? wheelSpeed : (touchMove ? touchDrag : dragSpeed);
+      const lim = touchMove ? 400 : 80; /* su touch nessun tetto basso: uno swipe rapido deve poter correre */
+      const deltaX = gsap.utils.clamp(-lim, lim, self.deltaX * speed);
+      const deltaY = gsap.utils.clamp(-lim, lim, self.deltaY * speed);
+      if (touchMove) {
+        fling.samples.push({t: performance.now(), dx: deltaX, dy: deltaY});
+        if (fling.samples.length > 20) fling.samples.shift();
+      }
       const moveX = isWheel ? -deltaX : deltaX;
       const moveY = isWheel ? -deltaY : deltaY;
       const strength = gsap.utils.clamp(0, 1, Math.max(Math.abs(deltaX), Math.abs(deltaY)) / 80);
