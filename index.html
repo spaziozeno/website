@@ -34,6 +34,14 @@ html.is-immersive,html.is-immersive body{overflow:hidden;height:100%}
 .nav-about__label.is-close{transform:translateY(100%)}
 body.about-open .nav-about__label.is-about{transform:translateY(-100%)}
 body.about-open .nav-about__label.is-close{transform:translateY(0)}
+/* Hover About / Contact: linea sottile che si disegna da sinistra e si ritira verso destra */
+.nav-link{position:relative}
+.nav-link::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right center;transition:transform .6s var(--osmo)}
+@media (hover:hover){
+  .nav-link:hover::after{transform:scaleX(1);transform-origin:left center}
+}
+.nav-link:focus-visible{outline:none}
+.nav-link:focus-visible::after{transform:scaleX(1);transform-origin:left center}
 .logo{position:absolute;left:50%;top:23px;transform:translateX(-50%);display:block;width:78px;height:11px;transition:opacity .6s var(--osmo)}
 .logo svg{display:block;width:100%;height:100%}
 .header-bg{position:fixed;inset:0 0 auto 0;height:var(--header);z-index:39;background:var(--menu);opacity:0;pointer-events:none;transition:opacity .6s var(--osmo)}
