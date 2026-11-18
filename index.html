@@ -132,9 +132,17 @@ body.about-closing .about{visibility:visible;transition-duration:.6s}
 .about__text p + p{margin-top:1.4em}
 .about__services{grid-column:3;grid-row:1;margin:0;font-size:18px;line-height:1.4}
 /* Con l'About aperto il logo torna sempre intero (SPAZIO ZENO), anche se la pagina è scorsa: i servizi si allineano al suo bordo sinistro */
-body.about-open .logo__mask{grid-template-columns:1fr}
-body.about-open .logo__text{transform:none;opacity:1}
-body.about-open .logo__dash{width:0;margin:0 2px}
+@media (min-width:1024px){
+  body.about-open .logo__mask{grid-template-columns:1fr}
+  body.about-open .logo__text{transform:none;opacity:1}
+  body.about-open .logo__dash{width:0;margin:0 2px}
+}
+/* Mobile: il logo è sempre S — Z, anche appena si entra */
+@media (max-width:767px){
+  .logo__dash{width:20px;margin:0 6px}
+  .logo__mask{grid-template-columns:0fr}
+  .logo__text{transform:translateX(-100%);opacity:0}
+}
 .about__media{grid-column:4;grid-row:1;position:relative;margin-top:calc(7.3 * var(--u));width:100%;aspect-ratio:407.8/405.1;overflow:hidden}
 .about__slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 0 0)}
 .about__slide.is-entering-next{clip-path:inset(0 0 0 100%)}
@@ -183,12 +191,17 @@ body.about-open .about__info{transition-delay:.4s}
   .hero__services{left:var(--pad);top:calc(96px + (100vw - 2 * var(--pad)) * 0.166 + 12px)}
   .view-toggle{top:auto;bottom:26px}
   .gallery{grid-template-columns:1fr}
-  .about{min-height:0;padding:12px var(--pad) 20px;display:flex;flex-direction:column;gap:24px}
+  .about{min-height:calc(100svh - var(--header));padding:12px var(--pad) 24px;display:flex;flex-direction:column;gap:24px}
   .about > *{flex-shrink:0}
   .about__text,.about__services,.about__media,.about__arrows,.about__info{margin-top:0;width:auto}
   .about__col{display:contents}
-  .about__info{grid-template-columns:1fr;row-gap:16px;order:10;margin:0}
+  .about__text{order:1}
+  .about__services{order:2}
+  .about__info{order:3;grid-template-columns:1fr auto;column-gap:16px;row-gap:16px;margin:0;width:100%}
+  .about__media{order:4}
+  .about__arrows{order:5}
   .about__info dd{white-space:normal}
+  .about__info div + div dd{white-space:nowrap}
   .about__info dd{font-size:16px}
   .about__text,.about__services{font-size:16px}
   .about__media{width:100%}
@@ -270,6 +283,14 @@ body.about-open .about__info{transition-delay:.4s}
   position: absolute;
 }
 
+/* ---------- Spazio Zeno sopra la griglia di Osmo ---------- */
+/* Card sempre quadrate anche su Safari iOS: altezza esplicita invece di aspect-ratio (Safari calcolava la card alta quanto tutto l'elemento → foto ritratto e tagliate) */
+.infinite-grid__item{height:13em}
+/* Un solo livello per card: traslazione e scala stanno sull'elemento esterno (meno memoria e meno lavoro per il telefono) */
+.infinite-grid__card,.infinite-grid__collection{will-change:auto}
+/* Mobile: un po' di zoom out, si intravedono le card ai lati */
+@media (max-width:767px){ .infinite-grid__item{font-size:4.36vw;padding:1.5em} }
+
 </style>
 </head>
 <body>
@@ -350,157 +371,157 @@ body.about-open .about__info{transition-delay:.4s}
     <div data-infinite-grid-list="" class="infinite-grid__list">
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-X9J9.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-X9J9-640.webp" srcset="img/SZ-X9J9-400.webp 400w, img/SZ-X9J9-640.webp 640w, img/SZ-X9J9.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_01.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-XM34.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-XM34-640.webp" srcset="img/SZ-XM34-400.webp 400w, img/SZ-XM34-640.webp 640w, img/SZ-XM34.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_02.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-V3N7.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-V3N7-640.webp" srcset="img/SZ-V3N7-400.webp 400w, img/SZ-V3N7-640.webp 640w, img/SZ-V3N7.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_03.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-ECXD.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-ECXD-640.webp" srcset="img/SZ-ECXD-400.webp 400w, img/SZ-ECXD-640.webp 640w, img/SZ-ECXD.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_04.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-NWYR.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-NWYR-640.webp" srcset="img/SZ-NWYR-400.webp 400w, img/SZ-NWYR-640.webp 640w, img/SZ-NWYR.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_05.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-KA3C.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-KA3C-640.webp" srcset="img/SZ-KA3C-400.webp 400w, img/SZ-KA3C-640.webp 640w, img/SZ-KA3C.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_06.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-MHJX.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-MHJX-640.webp" srcset="img/SZ-MHJX-400.webp 400w, img/SZ-MHJX-640.webp 640w, img/SZ-MHJX.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_07.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-TUEE.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-TUEE-640.webp" srcset="img/SZ-TUEE-400.webp 400w, img/SZ-TUEE-640.webp 640w, img/SZ-TUEE.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_08.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-PDTH.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-PDTH-640.webp" srcset="img/SZ-PDTH-400.webp 400w, img/SZ-PDTH-640.webp 640w, img/SZ-PDTH.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_09.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-NN7U.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-NN7U-640.webp" srcset="img/SZ-NN7U-400.webp 400w, img/SZ-NN7U-640.webp 640w, img/SZ-NN7U.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_10.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-CEXN.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-CEXN-640.webp" srcset="img/SZ-CEXN-400.webp 400w, img/SZ-CEXN-640.webp 640w, img/SZ-CEXN.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_11.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-DTJ7.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-DTJ7-640.webp" srcset="img/SZ-DTJ7-400.webp 400w, img/SZ-DTJ7-640.webp 640w, img/SZ-DTJ7.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_12.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-HYVX.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-HYVX-640.webp" srcset="img/SZ-HYVX-400.webp 400w, img/SZ-HYVX-640.webp 640w, img/SZ-HYVX.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_13.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-FW93.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-FW93-640.webp" srcset="img/SZ-FW93-400.webp 400w, img/SZ-FW93-640.webp 640w, img/SZ-FW93.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_14.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-3YUN.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-3YUN-640.webp" srcset="img/SZ-3YUN-400.webp 400w, img/SZ-3YUN-640.webp 640w, img/SZ-3YUN.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_15.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-N3M4.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-N3M4-640.webp" srcset="img/SZ-N3M4-400.webp 400w, img/SZ-N3M4-640.webp 640w, img/SZ-N3M4.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_16.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-PCXF.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-PCXF-640.webp" srcset="img/SZ-PCXF-400.webp 400w, img/SZ-PCXF-640.webp 640w, img/SZ-PCXF.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_17.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-9KC4.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-9KC4-640.webp" srcset="img/SZ-9KC4-400.webp 400w, img/SZ-9KC4-640.webp 640w, img/SZ-9KC4.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_18.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-9PMN.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-9PMN-640.webp" srcset="img/SZ-9PMN-400.webp 400w, img/SZ-9PMN-640.webp 640w, img/SZ-9PMN.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_19.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-3VYH.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-3VYH-640.webp" srcset="img/SZ-3VYH-400.webp 400w, img/SZ-3VYH-640.webp 640w, img/SZ-3VYH.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_20.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-J3AP.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-J3AP-640.webp" srcset="img/SZ-J3AP-400.webp 400w, img/SZ-J3AP-640.webp 640w, img/SZ-J3AP.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_21.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-RU3A.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-RU3A-640.webp" srcset="img/SZ-RU3A-400.webp 400w, img/SZ-RU3A-640.webp 640w, img/SZ-RU3A.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_22.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-AU4N.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-AU4N-640.webp" srcset="img/SZ-AU4N-400.webp 400w, img/SZ-AU4N-640.webp 640w, img/SZ-AU4N.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_23.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-CMHX.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-CMHX-640.webp" srcset="img/SZ-CMHX-400.webp 400w, img/SZ-CMHX-640.webp 640w, img/SZ-CMHX.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_24.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-TY9X.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-TY9X-640.webp" srcset="img/SZ-TY9X-400.webp 400w, img/SZ-TY9X-640.webp 640w, img/SZ-TY9X.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_25.JPG</span>
         </div>
       </div>
       <div data-infinite-grid-item="" class="infinite-grid__item">
         <div data-infinite-grid-card="" class="infinite-grid__card">
-          <img class="infinite-grid__card-img" src="img/SZ-F7E3.webp" alt="Spazio Zeno — progetto" width="930" height="930" loading="lazy" decoding="async" draggable="false">
+          <img class="infinite-grid__card-img" src="img/SZ-F7E3-640.webp" srcset="img/SZ-F7E3-400.webp 400w, img/SZ-F7E3-640.webp 640w, img/SZ-F7E3.webp 930w" sizes="(max-width:767px) 44vw, (max-width:1200px) 204px, (min-width:2400px) 408px, 17vw" alt="Spazio Zeno — progetto" width="640" height="640" loading="lazy" decoding="async" draggable="false">
           <span class="grid-name">PROJECT_26.JPG</span>
         </div>
       </div>
@@ -662,8 +683,7 @@ function initInfiniteCardsGrid() {
             baseY: row * size.itemH,
             startY: (column - centerColumn) * size.itemH * startOffsetY,
             ySpeed: columnSpeeds[column],
-            xSetter: gsap.quickSetter(item, 'x', 'px'),
-            ySetter: gsap.quickSetter(item, 'y', 'px')
+            el: item
           });
 
           if (card) cardElements.push(card);
@@ -675,9 +695,6 @@ function initInfiniteCardsGrid() {
 
       sourceList.appendChild(fragment);
 
-      gsap.set(cardElements, {
-        force3D: true
-      });
 
       pos.startX = wrapper.clientWidth * 0.5 - centerColumn * size.itemW - size.itemW * 0.5;
       pos.startY = wrapper.clientHeight * 0.5 - centerRow * size.itemH - size.itemH * 0.5;
@@ -688,7 +705,8 @@ function initInfiniteCardsGrid() {
       scale.current = 1;
       scale.target = 1;
 
-      updateGrid();
+      settled = false;
+      updateGrid(true);
       gsap.ticker.add(updateGrid);
 
       requestAnimationFrame(() => {
@@ -707,21 +725,35 @@ function initInfiniteCardsGrid() {
       });
     }
 
-    function updateGrid() {
-      pos.x += (pos.targetX - pos.x) * positionLerp;
-      pos.y += (pos.targetY - pos.y) * positionLerp;
-      scale.current += (scale.target - scale.current) * scaleLerp;
+    /* Spazio Zeno (prestazioni): traslazione e scala in un'unica trasformazione per card, scritta solo
+       quando la griglia si muove. Da ferma il ciclo non tocca il DOM, così il telefono non ridisegna nulla. */
+    let settled = false;
+    function updateGrid(force) {
+      const dx = pos.targetX - pos.x;
+      const dy = pos.targetY - pos.y;
+      const ds = scale.target - scale.current;
+      if (force !== true && Math.abs(dx) < 0.05 && Math.abs(dy) < 0.05 && Math.abs(ds) < 0.0005) {
+        if (settled) return;
+        pos.x = pos.targetX; pos.y = pos.targetY; scale.current = scale.target;
+        settled = true;
+      } else {
+        settled = false;
+        pos.x += dx * positionLerp;
+        pos.y += dy * positionLerp;
+        scale.current += ds * scaleLerp;
+      }
 
       const offsetX = size.itemW * gridOverscan;
       const offsetY = size.itemH * gridOverscan;
       const scrollY = pos.y - pos.startY;
+      const s = scale.current.toFixed(4);
 
-      cards.forEach(({baseX, baseY, startY, ySpeed, xSetter, ySetter}) => {
-        xSetter(wrapValue(baseX + pos.x + offsetX, size.totalW) - offsetX);
-        ySetter(wrapValue(baseY + pos.startY + startY + scrollY * ySpeed + offsetY, size.totalH) - offsetY);
-      });
-
-      gsap.set(cardElements, {scale: scale.current});
+      for (let i = 0; i < cards.length; i++) {
+        const c = cards[i];
+        const x = wrapValue(c.baseX + pos.x + offsetX, size.totalW) - offsetX;
+        const y = wrapValue(c.baseY + pos.startY + c.startY + scrollY * c.ySpeed + offsetY, size.totalH) - offsetY;
+        c.el.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) scale(${s})`;
+      }
     }
 
     function handleMovement(self) {
@@ -763,9 +795,15 @@ function initInfiniteCardsGrid() {
       }
     }
 
+    let builtW = wrapper.clientWidth, builtH = wrapper.clientHeight;
     window.addEventListener('resize', () => {
       clearTimeout(timers.resize);
-      timers.resize = setTimeout(buildGrid, 200);
+      timers.resize = setTimeout(() => {
+        const w = wrapper.clientWidth, h = wrapper.clientHeight;
+        if (w === builtW && Math.abs(h - builtH) < 160) return; /* barra di Safari che entra/esce: niente ricostruzione */
+        builtW = w; builtH = h;
+        buildGrid();
+      }, 200);
     });
 
     document.documentElement.addEventListener('mouseleave', handleMouseLeave);
@@ -883,7 +921,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (warmed) return warmed;
     const imgs = [...grid.querySelectorAll('.infinite-grid__card-img')];
     imgs.forEach((img) => { img.loading = 'eager'; });
-    const unique = [...new Map(imgs.map((i) => [i.getAttribute('src'), i])).values()];
+    const unique = [...new Map(imgs.map((i) => [i.currentSrc || i.getAttribute('src'), i])).values()];
     warmed = (async () => {
       for (let i = 0; i < unique.length; i += 6) {
         await Promise.all(unique.slice(i, i + 6).map((img) => (img.decode ? img.decode().catch(() => {}) : Promise.resolve())));
@@ -893,7 +931,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 400));
   window.addEventListener('load', () => idle(() => warmGrid(), {timeout: 1500}));
-  window.addEventListener('resize', () => { warmed = null; setTimeout(() => idle(() => warmGrid()), 400); });
+  let warmW = innerWidth;
+  window.addEventListener('resize', () => { if (innerWidth === warmW) return; warmW = innerWidth; warmed = null; setTimeout(() => idle(() => warmGrid()), 400); });
 
   function wave() {
     const imgs = [...grid.querySelectorAll('.infinite-grid__card-img')];
@@ -986,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function alignServices() {
     services.style.marginLeft = '0px';
-    if (getComputedStyle(services).gridColumnStart !== '3') return; /* tablet e mobile: servizi sotto il testo */
+    if (!matchMedia('(min-width:1024px)').matches) return; /* tablet e mobile: servizi allineati al testo, a sinistra */
     const h = logoEl.parentNode.getBoundingClientRect();
     const target = h.left + h.width / 2 - logoFullWidth() / 2;
     services.style.marginLeft = (target - services.getBoundingClientRect().left) + 'px';
