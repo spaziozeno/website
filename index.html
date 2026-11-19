@@ -166,6 +166,8 @@ body.about-closing .about{visibility:visible;transition-duration:.6s}
 .about__arrows button:disabled{opacity:.2;cursor:default}
 .about__arrows svg{display:block;width:100%;height:100%}
 .about__arrows .prev svg{transform:rotate(180deg)}
+/* Foto dell'About: senza foto spariscono foto e frecce, con una sola foto spariscono solo le frecce */
+.about--no-media .about__media,.about--no-media .about__arrows,.about--single .about__arrows{display:none}
 .about__fade{opacity:0;transition:opacity .25s var(--osmo)}
 body.about-open .about__fade{opacity:1;transition:opacity .7s var(--osmo)}
 body.about-open .about__text{transition-delay:.25s}
@@ -328,7 +330,9 @@ body.about-open .about__info{transition-delay:.4s}
   </div>
   <p class="about__services about__fade">Brand Strategy<br>Website Design<br>Branding<br>Digital Product Design<br>Photography<br>Performance Marketing</p>
   <div class="about__media" id="aboutMedia">
-    <div class="about__slide" role="img" aria-label="Image placeholder"></div>
+    <!-- FOTO DELL'ABOUT: aggiungi qui un <img> per ogni foto, nell'ordine in cui devono comparire.
+         Esempio: <img src="img/about/studio-01.webp" alt="Lo studio a San Zeno">
+         Nessuna foto = foto e frecce non compaiono · 1 foto = solo la foto, senza frecce · 2 o più = slider con le frecce -->
   </div>
   <div class="about__arrows about__fade">
     <button class="prev" type="button" aria-label="Previous image"><svg viewBox="0 0 46 46" fill="none" aria-hidden="true"><path d="M26.7351 10.9806L38.6706 22.916L26.7351 34.8515" stroke="white" stroke-width="2" stroke-linecap="square"/><path d="M37.2385 22.9161H7.16113" stroke="white" stroke-width="2" stroke-linecap="square"/></svg></button>
@@ -1141,33 +1145,51 @@ document.addEventListener('DOMContentLoaded', () => {
     if (immersive && !immersiveOnly) exitImmersive(); else if (!immersive) scrollTop(); else if (window.__szGridHome) window.__szGridHome();
   });
 
-  /* Slider dell'About: la nuova foto si scopre dal lato della freccia (0,9 s) */
+  /* Slider dell'About: la nuova foto si scopre dal lato della freccia (0,9 s).
+     Le foto sono gli <img> scritti dentro #aboutMedia nell'HTML: se non ce ne sono, foto e frecce non compaiono;
+     con una sola foto compare la foto senza frecce; da due in su è uno slider. */
   const media = document.getElementById('aboutMedia');
-  const slides = [0, 1, 2, 3, 4]; /* segnaposto: le foto vere arriveranno dopo */
+  const aboutPanel = document.getElementById('about');
+  const photos = Array.from(media.querySelectorAll('img')).map((img) => ({src: img.getAttribute('src'), alt: img.getAttribute('alt') || ''}));
+  media.textContent = '';
+  aboutPanel.classList.toggle('about--no-media', photos.length === 0);
+  aboutPanel.classList.toggle('about--single', photos.length === 1);
+  function makeSlide(i) {
+    const img = document.createElement('img');
+    img.className = 'about__slide';
+    img.src = photos[i].src;
+    img.alt = photos[i].alt;
+    img.decoding = 'async';
+    return img;
+  }
+  if (photos.length) media.appendChild(makeSlide(0));
+  /* precarica le altre foto, così il passaggio non aspetta il download */
+  photos.slice(1).forEach((p) => { const im = new Image(); im.src = p.src; });
   let index = 0;
   let sliding = false;
   const prevBtn = document.querySelector('.about__arrows .prev');
   const nextBtn = document.querySelector('.about__arrows .next');
-  function updateArrows() { prevBtn.disabled = index === 0; nextBtn.disabled = index === slides.length - 1; }
+  function updateArrows() { prevBtn.disabled = index === 0; nextBtn.disabled = index >= photos.length - 1; }
   updateArrows();
   function go(dir) {
     if (sliding) return;
     const to = index + dir;
-    if (to < 0 || to > slides.length - 1) return;
+    if (to < 0 || to > photos.length - 1) return;
     sliding = true;
     index = to;
     updateArrows();
     const current = media.querySelector('.about__slide:last-child');
-    const next = document.createElement('div');
-    next.className = 'about__slide ' + (index % 2 ? 'is-alt ' : '') + (dir > 0 ? 'is-entering-next' : 'is-entering-prev');
-    next.setAttribute('role', 'img');
-    next.setAttribute('aria-label', 'Image placeholder');
+    const next = makeSlide(index);
+    next.classList.add(dir > 0 ? 'is-entering-next' : 'is-entering-prev');
     media.appendChild(next);
-    next.getBoundingClientRect();
-    next.classList.add('is-moving');
-    next.classList.remove('is-entering-next', 'is-entering-prev');
-    const done = () => { if (current && current !== next) current.remove(); next.classList.remove('is-moving'); sliding = false; };
-    if (reduce) done(); else setTimeout(done, 920);
+    const start = () => {
+      next.getBoundingClientRect();
+      next.classList.add('is-moving');
+      next.classList.remove('is-entering-next', 'is-entering-prev');
+      const done = () => { if (current && current !== next) current.remove(); next.classList.remove('is-moving'); sliding = false; };
+      if (reduce) done(); else setTimeout(done, 920);
+    };
+    (next.decode ? next.decode() : Promise.resolve()).catch(() => {}).then(start);
   }
   prevBtn.addEventListener('click', () => go(-1));
   nextBtn.addEventListener('click', () => go(1));
